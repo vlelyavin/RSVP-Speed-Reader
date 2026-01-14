@@ -195,7 +195,7 @@
         transform-origin: center center;
         opacity: 0;
         transform: scale(0);
-        transition: opacity 0.4s ease-out, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transition: opacity 0.3s ease-out, transform 0.3s ease-out;
       }
 
       .reading-interface.active {
@@ -207,7 +207,7 @@
       .reading-interface.closing {
         opacity: 0;
         transform: scale(0);
-        transition: opacity 0.4s ease-in, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transition: opacity 0.3s ease-in, transform 0.3s ease-in;
       }
 
       .guide-lines {
@@ -557,7 +557,6 @@
         currentIndex: 0,
         isPlaying: false,
         timeoutId: null,
-        transformOrigin: "50% 50%", // Store transform origin for animations
         settings: {
           fontSize: 72, // Will be adjusted based on device type in loadSettings
           speed: 300,
@@ -747,7 +746,11 @@
 
       // Show next word
       function showNextWord() {
+        // Check if we've finished all words
         if (state.currentIndex >= state.words.length) {
+          // Show alert
+          alert("Playback has been finished");
+          // Add 500ms delay after playback finishes before closing
           stopReading();
           return;
         }
@@ -759,10 +762,18 @@
         const delay = calculateDelay(word);
         state.currentIndex++;
 
+        // Schedule next word if there are more words
         if (state.isPlaying && state.currentIndex < state.words.length) {
           state.timeoutId = setTimeout(showNextWord, delay);
-        } else if (state.currentIndex >= state.words.length) {
-          stopReading();
+        } else if (state.currentIndex >= state.words.length && state.isPlaying) {
+          // All words displayed, wait for the last word's delay, then show alert
+          setTimeout(() => {
+            alert("playback has been finished");
+            // Add 500ms delay after playback finishes before closing
+            setTimeout(() => {
+              stopReading();
+            }, 500);
+          }, delay);
         }
       }
 
@@ -782,21 +793,6 @@
         state.words = parseText(text);
         state.currentIndex = 0;
         state.isPlaying = true;
-
-        // Get start button position for animation
-        const buttonRect = startButton.getBoundingClientRect();
-        const buttonCenterX = buttonRect.left + buttonRect.width / 2;
-        const buttonCenterY = buttonRect.top + buttonRect.height / 2;
-        const viewportCenterX = window.innerWidth / 2;
-        const viewportCenterY = window.innerHeight / 2;
-
-        // Calculate transform origin based on button position
-        const originX = ((buttonCenterX - viewportCenterX) / window.innerWidth) * 100;
-        const originY = ((buttonCenterY - viewportCenterY) / window.innerHeight) * 100;
-
-        // Store transform origin for closing animation
-        state.transformOrigin = `${50 + originX}% ${50 + originY}%`;
-        readingInterface.style.transformOrigin = state.transformOrigin;
 
         inputInterface.classList.add("hidden");
         readingInterface.classList.remove("closing");
@@ -826,10 +822,7 @@
 
         pauseButton.textContent = "Pause";
 
-        // Use the same transform origin for closing animation
-        readingInterface.style.transformOrigin = state.transformOrigin;
-
-        // Animate closing (reverse of opening)
+        // Animate closing
         readingInterface.classList.add("closing");
         readingInterface.classList.remove("active");
 
@@ -837,7 +830,7 @@
         setTimeout(() => {
           readingInterface.classList.remove("closing");
           inputInterface.classList.remove("hidden");
-        }, 400);
+        }, 300);
       }
 
       // Update WPM display

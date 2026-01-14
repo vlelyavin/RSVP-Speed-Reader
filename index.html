@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RSVP Speed Reader</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #000000;
+        color: #ffffff;
+        overflow: hidden;
+        height: 100vh;
+      }
+
+      /* Input Interface */
+      .input-interface {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        padding: 20px;
+        transition: opacity 0.3s ease-out;
+      }
+
+      .input-interface-content {
+        display: flex;
+        gap: 20px;
+        /* flex: 1; */
+        align-items: center;
+      }
+
+      .input-interface.hidden {
+        display: none;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      h1 {
+        font-size: 3rem;
+        width: 100%;
+        margin-bottom: 20px;
+        margin-top: 20px;
+        text-align: center;
+        font-weight: normal;
+        font-family: Georgia, "Times New Roman", serif;
+      }
+
+      .text-input-area {
+        width: 100%;
+        height: 50vh;
+        background-color: #000000;
+        border: 2px solid #1a1a1a;
+        color: #ffffff;
+        font-family: "Inter", sans-serif;
+        font-size: 16px;
+        border-radius: 4px;
+        padding: 15px;
+        resize: none;
+        transition: border-color 0.2s ease-out;
+      }
+
+      .text-input-area:focus {
+        outline: none;
+        border-color: #ffffff;
+      }
+
+      .text-input-area::placeholder {
+        color: #ffffff;
+      }
+
+      .settings-panel {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 50px;
+        width: 100%;
+        padding: 20px;
+        border: 2px solid #1a1a1a;
+        border-radius: 4px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+      }
+
+      .setting-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .setting-label {
+        color: #ffffff;
+        font-size: 0.9rem;
+        font-family: Inter, sans-serif;
+      }
+
+      .setting-input {
+        background-color: #000000;
+        border: 2px solid #1a1a1a;
+        color: #ffffff;
+        padding: 8px 13px;
+        font-family: Inter, sans-serif;
+        font-size: 1rem;
+        transition: border-color 0.2s ease-out;
+      }
+
+      .setting-input:focus {
+        outline: none;
+        border-color: #ffffff;
+      }
+
+      .slider-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .slider {
+        flex: 1;
+        height: 4px;
+        background: #1a1a1a;
+        border-radius: 3px;
+        outline: none;
+        -webkit-appearance: none;
+        appearance: none;
+      }
+
+      .slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 16px;
+        height: 16px;
+        background: #e63946;
+        cursor: pointer;
+        border-radius: 50%;
+      }
+
+      .slider::-moz-range-thumb {
+        width: 16px;
+        height: 16px;
+        background: #e63946;
+        cursor: pointer;
+        border-radius: 50%;
+        border: none;
+      }
+
+      .slider-value {
+        color: #ffffff;
+        min-width: 60px;
+        text-align: left;
+        font-family: Inter, sans-serif;
+      }
+
+      .start-button {
+        background-color: #e63946;
+        color: #ffffff;
+        border: none;
+        padding: 15px 40px;
+        font-size: 1.2rem;
+        font-family: Georgia, "Times New Roman", serif;
+        cursor: pointer;
+        align-self: center;
+        margin-top: 20px;
+        transition: all 0.2s ease-out;
+        border-radius: 4px;
+      }
+
+      .start-button:hover {
+        background-color: #f14d5a;
+        transform: scale(1.05);
+      }
+
+      .start-button:active {
+        transform: scale(0.98);
+      }
+
+      /* Reading Interface */
+      .reading-interface {
+        display: none;
+        flex-direction: column;
+        height: 100vh;
+        position: relative;
+        background-color: #000000;
+        transform-origin: center center;
+        opacity: 0;
+        transform: scale(0);
+        transition: opacity 0.4s ease-out, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .reading-interface.active {
+        display: flex;
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      .reading-interface.closing {
+        opacity: 0;
+        transform: scale(0);
+        transition: opacity 0.4s ease-in, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .guide-lines {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        /* controls the black gap in the vertical guide around the word area */
+        --vline-gap: 140px;
+      }
+
+      .guide-line-top {
+        position: absolute;
+        top: 30%;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background-color: #1a1a1a;
+      }
+
+      .guide-line-bottom {
+        position: absolute;
+        bottom: 30%;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background-color: #1a1a1a;
+      }
+
+      .guide-line-vertical-top,
+      .guide-line-vertical-bottom {
+        position: absolute;
+        left: 50%;
+        width: 2px;
+        background-color: #1a1a1a;
+        transform: translateX(-50%);
+        /* opacity: 0.5; */
+      }
+
+      .guide-line-vertical-top {
+        top: 30%;
+        height: calc(20% - (var(--vline-gap) / 2));
+      }
+
+      .guide-line-vertical-bottom {
+        bottom: 30%;
+        height: calc(20% - (var(--vline-gap) / 2));
+      }
+
+      .word-display-container {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+
+      .word-display {
+        font-size: 73px;
+        line-height: 1.2;
+        position: relative;
+        font-family: Georgia, "Times New Roman", serif;
+        white-space: nowrap;
+        display: flex;
+        gap: 1px;
+        /* letter-spacing: 0; */
+      }
+
+      .word-display .word-part {
+        display: inline-block;
+        letter-spacing: 0;
+      }
+
+      .word-display .orp-letter {
+        color: #e63946;
+        letter-spacing: 0;
+        margin: 0;
+        padding: 0;
+      }
+
+      .controls {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+        padding: 15px;
+        background-color: rgba(0, 0, 0, 0.7);
+        border-radius: 8px;
+        opacity: 0;
+        transition: opacity 0.3s ease-out;
+      }
+
+      .controls-row {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+      }
+
+      .reading-interface:hover .controls {
+        opacity: 1;
+      }
+
+      .control-button {
+        background: transparent;
+        border: 2px solid #1a1a1a;
+        color: #ffffff;
+        padding: 8px 15px;
+        cursor: pointer;
+        font-family: "Inter", sans-serif;
+        font-size: 0.9rem;
+        transition: all 0.2s ease-out;
+        border-radius: 4px;
+      }
+
+      #pauseButton,
+      #stopButton {
+        min-width: 100px;
+      }
+
+      .control-button:hover {
+        background: #1a1a1a;
+      }
+
+      .speed-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .speed-display {
+        color: #ffffff;
+        min-width: 80px;
+        text-align: center;
+      }
+
+      .progress-indicator {
+        color: #ffffff;
+        font-size: 0.9rem;
+        font-family: Inter, sans-serif;
+        margin-bottom: 5px;
+      }
+
+      @media (max-width: 768px) {
+        /* Input Interface Mobile */
+        .input-interface {
+          padding: 15px;
+        }
+
+        .input-interface-content {
+          flex-direction: column;
+          gap: 15px;
+          align-items: stretch;
+        }
+
+        .header {
+          margin-bottom: 15px;
+        }
+
+        h1 {
+          font-size: 1.5rem;
+        }
+
+        .text-input-area {
+          font-size: 14px;
+          padding: 12px;
+          height: 40vh;
+        }
+
+        .settings-panel {
+          grid-template-columns: 1fr;
+          gap: 15px;
+          padding: 15px;
+          margin-top: 15px;
+          margin-bottom: 15px;
+          width: 100%;
+        }
+
+        .setting-label {
+          font-size: 0.85rem;
+        }
+
+        .setting-input {
+          font-size: 0.9rem;
+          padding: 10px 12px;
+        }
+
+        .slider-value {
+          font-size: 0.85rem;
+        }
+
+        .start-button {
+          font-size: 1rem;
+          padding: 12px 30px;
+          margin-top: 15px;
+          align-self: stretch;
+          width: 100%;
+        }
+
+        .controls {
+          opacity: 1; /* Always visible on mobile */
+          bottom: 10px;
+          left: 10px;
+          right: 10px;
+          transform: none;
+          width: calc(100% - 20px);
+          padding: 12px;
+          gap: 8px;
+        }
+
+        .controls-row {
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 10px;
+          width: 100%;
+        }
+
+        .control-button {
+          font-size: 0.85rem;
+          padding: 10px 18px;
+          min-height: 44px; /* Touch-friendly size */
+        }
+
+        #pauseButton,
+        #stopButton {
+          min-width: 90px;
+          flex: 1;
+          max-width: 150px;
+        }
+
+        .speed-controls {
+          gap: 8px;
+        }
+
+        .speed-controls .control-button {
+          min-width: 44px;
+          padding: 10px;
+        }
+
+        .speed-display {
+          font-size: 0.85rem;
+          min-width: 70px;
+        }
+
+        .progress-indicator {
+          font-size: 0.85rem;
+          margin-bottom: 8px;
+        }
+
+        /* Guide lines adjustment for mobile */
+        .guide-line-top {
+          top: 25%;
+        }
+
+        .guide-line-bottom {
+          bottom: 25%;
+        }
+
+        .guide-line-vertical-top {
+          top: 25%;
+          height: calc(25% - (var(--vline-gap) / 2));
+        }
+
+        .guide-line-vertical-bottom {
+          bottom: 25%;
+          height: calc(25% - (var(--vline-gap) / 2));
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Input Interface -->
+    <div class="input-interface" id="inputInterface">
+      <div class="header">
+        <h1>RSVP Speed Reader</h1>
+      </div>
+      <textarea class="text-input-area" id="textInput" placeholder="Paste your text here..."></textarea>
+      <div class="input-interface-content">
+        <div class="settings-panel">
+          <div class="setting-group">
+            <label class="setting-label">Font Size</label>
+            <div class="slider-container">
+              <input type="range" class="slider" id="fontSizeSlider" min="24" max="120" value="72" />
+              <span class="slider-value" id="fontSizeValue">72px</span>
+            </div>
+          </div>
+          <div class="setting-group">
+            <label class="setting-label">Reading Speed (WPM)</label>
+            <div class="slider-container">
+              <input type="range" class="slider" id="speedSlider" min="100" max="1000" step="10" value="300" />
+              <span class="slider-value" id="speedValue">300 wpm</span>
+            </div>
+          </div>
+          <div class="setting-group">
+            <label class="setting-label">Punctuation Pause</label>
+            <div class="slider-container">
+              <input type="range" class="slider" id="punctuationSlider" min="0" step="5" max="500" value="150" />
+              <span class="slider-value" id="punctuationValue">150ms</span>
+            </div>
+          </div>
+          <!-- <div class="setting-group">
+            <label class="setting-label">Font Family</label>
+            <select class="setting-input" id="fontFamilySelect">
+              <option value="'Times New Roman', Times, Georgia, serif">Times New Roman</option>
+              <option value="Georgia, 'Times New Roman', serif">Georgia</option>
+              <option value="Garamond, 'Times New Roman', serif">Garamond</option>
+              <option value="Palatino, 'Times New Roman', serif">Palatino</option>
+            </select>
+          </div> -->
+        </div>
+      </div>
+      <button class="start-button" id="startButton">Start Reading</button>
+    </div>
+
+    <!-- Reading Interface -->
+    <div class="reading-interface" id="readingInterface">
+      <div class="guide-lines">
+        <div class="guide-line-top"></div>
+        <div class="guide-line-bottom"></div>
+        <div class="guide-line-vertical-top"></div>
+        <div class="guide-line-vertical-bottom"></div>
+      </div>
+      <div class="word-display-container">
+        <div class="word-display" id="wordDisplay"></div>
+      </div>
+      <div class="controls">
+        <div class="progress-indicator" id="progressIndicator">0 / 0</div>
+        <div class="controls-row">
+          <button class="control-button" id="pauseButton">Pause</button>
+          <button class="control-button" id="stopButton">Stop</button>
+          <div class="speed-controls">
+            <button class="control-button" id="speedDown">−</button>
+            <span class="speed-display" id="speedDisplay">300 wpm</span>
+            <button class="control-button" id="speedUp">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // State management
+      const state = {
+        words: [],
+        currentIndex: 0,
+        isPlaying: false,
+        timeoutId: null,
+        transformOrigin: "50% 50%", // Store transform origin for animations
+        settings: {
+          fontSize: 72, // Will be adjusted based on device type in loadSettings
+          speed: 300,
+          punctuationPause: 150,
+          fontFamily: "'Times New Roman', Times, Georgia, serif",
+        },
+      };
+
+      // DOM elements
+      const inputInterface = document.getElementById("inputInterface");
+      const readingInterface = document.getElementById("readingInterface");
+      const guideLines = document.querySelector(".guide-lines");
+      const textInput = document.getElementById("textInput");
+      const wordDisplay = document.getElementById("wordDisplay");
+      const startButton = document.getElementById("startButton");
+      const pauseButton = document.getElementById("pauseButton");
+      const stopButton = document.getElementById("stopButton");
+      // const fullscreenToggle = document.getElementById("fullscreenToggle");
+      const speedDisplay = document.getElementById("speedDisplay");
+      const progressIndicator = document.getElementById("progressIndicator");
+
+      // Settings elements
+      const fontSizeSlider = document.getElementById("fontSizeSlider");
+      const fontSizeValue = document.getElementById("fontSizeValue");
+      const speedSlider = document.getElementById("speedSlider");
+      const speedValue = document.getElementById("speedValue");
+      const punctuationSlider = document.getElementById("punctuationSlider");
+      const punctuationValue = document.getElementById("punctuationValue");
+      // const fontFamilySelect = document.getElementById("fontFamilySelect");
+      const speedUp = document.getElementById("speedUp");
+      const speedDown = document.getElementById("speedDown");
+
+      // Load settings from localStorage
+      function loadSettings() {
+        const saved = localStorage.getItem("rsvpSettings");
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          state.settings = { ...state.settings, ...parsed };
+        }
+
+        // Update slider range based on device type
+        updateFontSizeSliderRange();
+
+        // Set slider values after range is updated
+        fontSizeSlider.value = state.settings.fontSize;
+        fontSizeValue.textContent = state.settings.fontSize + "px";
+        speedSlider.value = state.settings.speed;
+        speedValue.textContent = state.settings.speed + " wpm";
+        punctuationSlider.value = state.settings.punctuationPause;
+        punctuationValue.textContent = state.settings.punctuationPause + "ms";
+        // fontFamilySelect.value = state.settings.fontFamily;
+      }
+
+      // Save settings to localStorage
+      function saveSettings() {
+        localStorage.setItem("rsvpSettings", JSON.stringify(state.settings));
+      }
+
+      // Calculate ORP (Optimal Recognition Point) index
+      function calculateORP(word) {
+        const length = word.length;
+        if (length <= 3) return 0;
+        if (length <= 5) return 1;
+        if (length <= 9) return 2;
+        return 3;
+      }
+
+      // Check if device is mobile
+      function isMobile() {
+        return window.innerWidth <= 768;
+      }
+
+      // Update font size slider range based on device type
+      function updateFontSizeSliderRange() {
+        const isMobileDevice = isMobile();
+        if (isMobileDevice) {
+          // Mobile: divide by 2.5 (24/2.5=9.6≈10, 120/2.5=48, 72/2.5=28.8≈29)
+          fontSizeSlider.min = 10;
+          fontSizeSlider.max = 48;
+          // If current value is desktop range, convert to mobile range
+          if (state.settings.fontSize > 48) {
+            state.settings.fontSize = Math.round(state.settings.fontSize / 2.5);
+            saveSettings();
+          }
+          // Set default if no saved value or value is out of range
+          if (!state.settings.fontSize || state.settings.fontSize < 10 || state.settings.fontSize > 48) {
+            state.settings.fontSize = 29; // Default mobile: 72/2.5 ≈ 29
+            saveSettings();
+          }
+        } else {
+          // Desktop: original range
+          fontSizeSlider.min = 24;
+          fontSizeSlider.max = 120;
+          // If current value is mobile range, convert to desktop range
+          if (state.settings.fontSize <= 48) {
+            state.settings.fontSize = Math.round(state.settings.fontSize * 2.5);
+            saveSettings();
+          }
+          // Set default if no saved value or value is out of range
+          if (!state.settings.fontSize || state.settings.fontSize < 24 || state.settings.fontSize > 120) {
+            state.settings.fontSize = 72; // Default desktop
+            saveSettings();
+          }
+        }
+      }
+
+      // Measure text width helper
+      let measureElement = null;
+      function getTextWidth(text, fontSize, fontFamily) {
+        if (!measureElement) {
+          measureElement = document.createElement("span");
+          measureElement.style.position = "absolute";
+          measureElement.style.visibility = "hidden";
+          measureElement.style.whiteSpace = "nowrap";
+          document.body.appendChild(measureElement);
+        }
+        measureElement.style.fontSize = fontSize + "px";
+        measureElement.style.fontFamily = fontFamily;
+        measureElement.textContent = text;
+        return measureElement.offsetWidth;
+      }
+
+      // Display word with ORP highlighting
+      function displayWord(word) {
+        const orpIndex = calculateORP(word);
+        const beforeORP = word.substring(0, orpIndex);
+        const orpLetter = word.substring(orpIndex, orpIndex + 1);
+        const afterORP = word.substring(orpIndex + 1);
+
+        // Apply font size and family
+        wordDisplay.style.fontSize = state.settings.fontSize + "px";
+        wordDisplay.style.fontFamily = state.settings.fontFamily;
+
+        // Make a black gap in the vertical guide where the word appears (video-like)
+        // Slightly larger than font size to account for ascenders/descenders.
+        if (guideLines) {
+          guideLines.style.setProperty("--vline-gap", Math.round(state.settings.fontSize * 2.5) + "px");
+        }
+
+        // Create word parts
+        wordDisplay.innerHTML = `
+                <span class="word-part">${escapeHtml(beforeORP)}</span>
+                <span class="word-part orp-letter">${escapeHtml(orpLetter)}</span>
+                <span class="word-part">${escapeHtml(afterORP)}</span>
+            `;
+
+        // Position word so ORP letter aligns with center vertical guide
+        // Measure widths to calculate proper offset
+        const fontFamily = state.settings.fontFamily;
+        const beforeWidth = getTextWidth(beforeORP, state.settings.fontSize, fontFamily);
+        const orpWidth = getTextWidth(orpLetter, state.settings.fontSize, fontFamily);
+        const totalWidth = getTextWidth(word, state.settings.fontSize, fontFamily);
+
+        // Calculate offset: center ORP letter at 50% of viewport
+        // Offset = (beforeWidth + orpWidth/2) - totalWidth/2
+        const offset = beforeWidth + orpWidth / 2 - totalWidth / 2;
+        wordDisplay.style.transform = `translateX(${-offset}px)`;
+      }
+
+      // Escape HTML to prevent XSS
+      function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      // Parse text into words
+      function parseText(text) {
+        // Split by whitespace and filter empty strings
+        return text
+          .trim()
+          .split(/\s+/)
+          .filter((word) => word.length > 0);
+      }
+
+      // Check if word ends with punctuation
+      function hasPunctuation(word) {
+        return /[.,!?;:]$/.test(word);
+      }
+
+      // Calculate delay for word
+      function calculateDelay(word) {
+        const baseDelay = (60 / state.settings.speed) * 1000; // Convert WPM to milliseconds
+        const punctuationDelay = hasPunctuation(word) ? state.settings.punctuationPause : 0;
+        return baseDelay + punctuationDelay;
+      }
+
+      // Show next word
+      function showNextWord() {
+        if (state.currentIndex >= state.words.length) {
+          stopReading();
+          return;
+        }
+
+        const word = state.words[state.currentIndex];
+        displayWord(word);
+        updateProgress();
+
+        const delay = calculateDelay(word);
+        state.currentIndex++;
+
+        if (state.isPlaying && state.currentIndex < state.words.length) {
+          state.timeoutId = setTimeout(showNextWord, delay);
+        } else if (state.currentIndex >= state.words.length) {
+          stopReading();
+        }
+      }
+
+      // Update progress indicator
+      function updateProgress() {
+        progressIndicator.textContent = `${state.currentIndex} / ${state.words.length}`;
+      }
+
+      // Start reading
+      function startReading() {
+        const text = textInput.value.trim();
+        if (!text) {
+          alert("Please enter some text to read.");
+          return;
+        }
+
+        state.words = parseText(text);
+        state.currentIndex = 0;
+        state.isPlaying = true;
+
+        // Get start button position for animation
+        const buttonRect = startButton.getBoundingClientRect();
+        const buttonCenterX = buttonRect.left + buttonRect.width / 2;
+        const buttonCenterY = buttonRect.top + buttonRect.height / 2;
+        const viewportCenterX = window.innerWidth / 2;
+        const viewportCenterY = window.innerHeight / 2;
+
+        // Calculate transform origin based on button position
+        const originX = ((buttonCenterX - viewportCenterX) / window.innerWidth) * 100;
+        const originY = ((buttonCenterY - viewportCenterY) / window.innerHeight) * 100;
+
+        // Store transform origin for closing animation
+        state.transformOrigin = `${50 + originX}% ${50 + originY}%`;
+        readingInterface.style.transformOrigin = state.transformOrigin;
+
+        inputInterface.classList.add("hidden");
+        readingInterface.classList.remove("closing");
+        readingInterface.classList.add("active");
+
+        updateWPMDisplay();
+        showNextWord();
+      }
+
+      // Pause/Resume reading
+      function togglePause() {
+        state.isPlaying = !state.isPlaying;
+        pauseButton.textContent = state.isPlaying ? "Pause" : "Resume";
+
+        if (state.isPlaying) {
+          showNextWord();
+        } else {
+          clearTimeout(state.timeoutId);
+        }
+      }
+
+      // Stop reading
+      function stopReading() {
+        state.isPlaying = false;
+        state.currentIndex = 0;
+        clearTimeout(state.timeoutId);
+
+        pauseButton.textContent = "Pause";
+
+        // Use the same transform origin for closing animation
+        readingInterface.style.transformOrigin = state.transformOrigin;
+
+        // Animate closing (reverse of opening)
+        readingInterface.classList.add("closing");
+        readingInterface.classList.remove("active");
+
+        // Wait for animation to complete before showing input interface
+        setTimeout(() => {
+          readingInterface.classList.remove("closing");
+          inputInterface.classList.remove("hidden");
+        }, 400);
+      }
+
+      // Update WPM display
+      function updateWPMDisplay() {
+        speedDisplay.textContent = state.settings.speed + " wpm";
+      }
+
+      // Adjust speed
+      function adjustSpeed(delta) {
+        const newSpeed = Math.max(100, Math.min(1000, state.settings.speed + delta));
+        state.settings.speed = newSpeed;
+        speedSlider.value = newSpeed;
+        speedValue.textContent = newSpeed + " wpm";
+        updateWPMDisplay();
+        saveSettings();
+      }
+
+      // Toggle fullscreen
+      function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch((err) => {
+            console.log("Error attempting to enable fullscreen:", err);
+          });
+        } else {
+          document.exitFullscreen();
+        }
+      }
+
+      // Event listeners
+      startButton.addEventListener("click", startReading);
+      pauseButton.addEventListener("click", togglePause);
+      stopButton.addEventListener("click", stopReading);
+      // fullscreenToggle.addEventListener("click", toggleFullscreen);
+
+      // Settings event listeners
+      fontSizeSlider.addEventListener("input", (e) => {
+        state.settings.fontSize = parseInt(e.target.value);
+        fontSizeValue.textContent = state.settings.fontSize + "px";
+        saveSettings();
+      });
+
+      speedSlider.addEventListener("input", (e) => {
+        state.settings.speed = parseInt(e.target.value);
+        speedValue.textContent = state.settings.speed + " wpm";
+        updateWPMDisplay();
+        saveSettings();
+      });
+
+      punctuationSlider.addEventListener("input", (e) => {
+        state.settings.punctuationPause = parseInt(e.target.value);
+        punctuationValue.textContent = state.settings.punctuationPause + "ms";
+        saveSettings();
+      });
+
+      // fontFamilySelect.addEventListener("change", (e) => {
+      //   state.settings.fontFamily = e.target.value;
+      //   saveSettings();
+      // });
+
+      speedUp.addEventListener("click", () => adjustSpeed(50));
+      speedDown.addEventListener("click", () => adjustSpeed(-50));
+
+      // Keyboard shortcuts
+      document.addEventListener("keydown", (e) => {
+        // Only handle shortcuts when reading interface is active
+        if (!readingInterface.classList.contains("active")) {
+          return;
+        }
+
+        switch (e.key) {
+          case " ":
+            e.preventDefault();
+            togglePause();
+            break;
+          case "Escape":
+            e.preventDefault();
+            stopReading();
+            break;
+          case "ArrowUp":
+            e.preventDefault();
+            adjustSpeed(50);
+            break;
+          case "ArrowDown":
+            e.preventDefault();
+            adjustSpeed(-50);
+            break;
+        }
+      });
+
+      // Initialize
+      loadSettings();
+      updateWPMDisplay();
+
+      // Update font size slider range on window resize
+      let resizeTimeout;
+      window.addEventListener("resize", () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          const oldValue = state.settings.fontSize;
+          updateFontSizeSliderRange();
+          // Update display if value changed
+          if (oldValue !== state.settings.fontSize) {
+            fontSizeSlider.value = state.settings.fontSize;
+            fontSizeValue.textContent = state.settings.fontSize + "px";
+          }
+        }, 100);
+      });
+    </script>
+  </body>
+</html>

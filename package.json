@@ -1,0 +1,33 @@
+{
+  "name": "reader",
+  "version": "1.0.0",
+  "description": "RSVP Speed Reader - Read faster with optimal recognition point highlighting",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "deploy": "gh-pages -d dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vlelyavin/RSVP-Speed-Reader.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/vlelyavin/RSVP-Speed-Reader/issues"
+  },
+  "homepage": "https://github.com/vlelyavin/RSVP-Speed-Reader#readme",
+  "devDependencies": {
+    "gh-pages": "^6.3.0",
+    "javascript-obfuscator": "^5.1.0",
+    "vite": "^7.3.1",
+    "vite-plugin-javascript-obfuscator": "^3.1.0"
+  },
+  "dependencies": {
+    "terser": "^5.44.1"
+  }
+}

@@ -217,7 +217,7 @@
       .input-panel > label {
         color: #fff;
         font-size: 0.9rem;
-        letter-spacing: 0.05em;
+        /* letter-spacing: 0.05em; */
       }
 
       .field input[type="text"] {
@@ -289,7 +289,7 @@
         cursor: pointer;
         color: #fff;
         font-size: 0.8rem;
-        letter-spacing: 0.03em;
+        /* letter-spacing: 0.03em; */
       }
 
       .toggle input[type="checkbox"] {
@@ -346,7 +346,7 @@
       }
 
       .sidebar-overlay.active {
-        background-color: rgba(0, 0, 0, 0.2);
+        background-color: rgba(0, 0, 0, 0.5);
         pointer-events: auto;
       }
 
@@ -384,7 +384,7 @@
         padding: 15px 8px;
         color: #fff;
         font-size: 0.7rem;
-        letter-spacing: 0.1em;
+        /* letter-spacing: 0.1em; */
         cursor: pointer;
         border-radius: 0 7px 7px 0;
       }
@@ -406,9 +406,10 @@
 
       .sidebar-title {
         color: #fff;
-        font-size: 0.9rem;
-        letter-spacing: 0.05em;
+        font-size: 1.1rem;
+        /* letter-spacing: 0.05em; */
         margin-bottom: 10px;
+        font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
       }
 
       .sidebar-settings {
@@ -426,12 +427,12 @@
       .sidebar-setting-label {
         color: #fff;
         font-size: 0.7rem;
-        letter-spacing: 0.03em;
+        /* letter-spacing: 0.03em; */
       }
 
       .sidebar-setting-slider-wrapper {
         position: relative;
-        padding-top: 20px;
+        padding-top: 16px;
       }
 
       .sidebar-setting .slider {
@@ -478,7 +479,7 @@
         padding: 3px 6px;
         border-radius: 6px;
         font-family: monospace;
-        color: #fff;
+        color: #888;
         min-width: 35px;
         text-align: center;
         font-size: 0.7rem;
@@ -518,7 +519,7 @@
         padding: 15px 8px;
         color: #fff;
         font-size: 0.7rem;
-        letter-spacing: 0.1em;
+        /* letter-spacing: 0.1em; */
         cursor: pointer;
         border-radius: 7px 0 0 7px;
       }
@@ -546,8 +547,9 @@
 
       .history-title {
         color: #fff;
-        font-size: 0.9rem;
-        letter-spacing: 0.05em;
+        font-size: 1.1rem;
+        font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
+        /* letter-spacing: 0.05em; */
       }
 
       .history-header button.ghost {
@@ -586,7 +588,7 @@
         gap: 10px;
         background-color: #111;
         border: 1px solid #333;
-        border-left: 3px solid #e63946;
+        /* border-left: 1px solid #e63946; */
         padding: 12px;
         border-radius: 7px;
       }
@@ -606,6 +608,19 @@
       .history-item-meta {
         color: #fff;
         font-size: 0.7rem;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+      }
+
+      .progress-circle {
+        width: 0.9rem;
+        height: 0.9rem;
+        border-radius: 50%;
+        background: conic-gradient(#e63946 0deg, #222 0deg);
+        flex-shrink: 0;
+        margin-bottom: -1px;
+        border: 1px solid #333;
       }
 
       .history-item-actions {
@@ -890,7 +905,7 @@
         background: #0a0a0a;
         cursor: pointer;
         font-family: "Golos Text", sans-serif;
-        font-size: 0.9rem;
+        font-size: 0.75rem;
         transition: all 0.2s ease-out;
         border-radius: 7px;
       }
@@ -914,6 +929,66 @@
         color: #ffffff;
         min-width: 80px;
         text-align: center;
+      }
+
+      /* Progress Bar */
+      .progress-bar-container {
+        width: 100%;
+        max-width: 600px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .progress-percentage {
+        color: #ffffff;
+        font-size: 0.85rem;
+        text-align: center;
+        /* font-family: monospace; */
+      }
+
+      .progress-bar-wrapper {
+        width: 100%;
+        height: 6px;
+        background-color: #222;
+        border-radius: 3px;
+        position: relative;
+        cursor: pointer;
+        transition: height 0.2s ease-out;
+      }
+
+      .progress-bar-wrapper:hover {
+        height: 8px;
+      }
+
+      .progress-bar-fill {
+        height: 100%;
+        background-color: #e63946;
+        border-radius: 3px;
+        transition: width 0.2s linear;
+        pointer-events: none;
+      }
+
+      .progress-controls-hint {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .progress-controls-hint .hint-item {
+        color: #666;
+        font-size: 0.7rem;
+        line-height: 1;
+      }
+
+      .progress-controls-hint .hint-item span {
+        background-color: #1a1a1a;
+        padding: 2px 5px;
+        border-radius: 4px;
+        font-family: monospace;
+        color: #888;
+        font-size: 0.65rem;
       }
 
       .progress-indicator {
@@ -1013,7 +1088,7 @@
         }
 
         .control-button {
-          font-size: 0.85rem;
+          font-size: 0.75rem;
           padding: 10px 18px;
           min-height: 44px; /* Touch-friendly size */
         }
@@ -1196,16 +1271,21 @@
         <div class="word-display" id="wordDisplay"></div>
       </div>
       <div class="controls">
-        <div class="progress-indicator" id="progressIndicator">0 / 0</div>
+        <div class="progress-bar-container">
+          <div class="progress-percentage" id="progressPercentage">0.00%</div>
+          <div class="progress-bar-wrapper" id="progressBarWrapper">
+            <div class="progress-bar-fill" id="progressBarFill"></div>
+          </div>
+          <div class="progress-controls-hint">
+            <div class="hint-item"><span>Space</span> start/pause</div>
+            <div class="hint-item"><span>R</span> reset</div>
+            <div class="hint-item"><span>← →</span> step words</div>
+          </div>
+        </div>
         <div class="controls-row">
           <button class="control-button" id="pauseButton">Pause</button>
           <button class="control-button" id="resetButton">Reset</button>
           <button class="control-button" id="stopButton">Stop</button>
-          <!-- <div class="speed-controls">
-            <button class="control-button" id="speedDown">−</button>
-            <span class="speed-display" id="speedDisplay">300wpm</span>
-            <button class="control-button" id="speedUp">+</button>
-          </div> -->
         </div>
       </div>
     </div>
@@ -1237,7 +1317,9 @@
       const pauseButton = document.getElementById("pauseButton");
       const stopButton = document.getElementById("stopButton");
       // const speedDisplay = document.getElementById("speedDisplay");
-      const progressIndicator = document.getElementById("progressIndicator");
+      const progressPercentage = document.getElementById("progressPercentage");
+      const progressBarWrapper = document.getElementById("progressBarWrapper");
+      const progressBarFill = document.getElementById("progressBarFill");
 
       // New input panel elements
       const docTitleInput = document.getElementById("docTitle");
@@ -1459,7 +1541,10 @@
 
       // Update progress indicator
       function updateProgress() {
-        progressIndicator.textContent = `${state.currentIndex} / ${state.words.length}`;
+        // Update progress bar
+        const progressPercent = state.words.length > 0 ? (state.currentIndex / state.words.length) * 100 : 0;
+        progressPercentage.textContent = `${progressPercent.toFixed(2)}%`;
+        progressBarFill.style.width = `${progressPercent}%`;
       }
 
       // Start reading
@@ -1597,6 +1682,44 @@
       // History functions
       clearHistoryBtn.addEventListener("click", clearHistory);
 
+      // Progress bar interaction
+      let isDraggingProgress = false;
+
+      function updateProgressFromPosition(clientX) {
+        const rect = progressBarWrapper.getBoundingClientRect();
+        const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
+        const percent = x / rect.width;
+        const newIndex = Math.floor(percent * state.words.length);
+
+        state.currentIndex = Math.max(0, Math.min(newIndex, state.words.length - 1));
+
+        if (state.words.length > 0) {
+          displayWord(state.words[state.currentIndex]);
+          updateProgress();
+        }
+      }
+
+      progressBarWrapper.addEventListener("mousedown", (e) => {
+        isDraggingProgress = true;
+        updateProgressFromPosition(e.clientX);
+      });
+
+      document.addEventListener("mousemove", (e) => {
+        if (isDraggingProgress) {
+          updateProgressFromPosition(e.clientX);
+        }
+      });
+
+      document.addEventListener("mouseup", () => {
+        isDraggingProgress = false;
+      });
+
+      progressBarWrapper.addEventListener("click", (e) => {
+        if (!isDraggingProgress) {
+          updateProgressFromPosition(e.clientX);
+        }
+      });
+
       // Reset input - clears title and textarea
       function resetInput() {
         state.currentIndex = 0;
@@ -1621,6 +1744,25 @@
       }
 
       // Process PDF file
+      // Clean up PDF text by removing unnecessary whitespace and invalid characters
+      function cleanPDFText(text) {
+        // Remove common PDF encoding artifacts and invalid unicode characters
+        text = text
+          // Remove box drawing characters and other common PDF artifacts
+          .replace(/[\u2500-\u257F]/g, "") // Box drawing characters
+          .replace(/[\uFFFD]/g, "") // Replacement character (�)
+          .replace(/[\u0000-\u001F]/g, " ") // Control characters except newline/tab
+          .replace(/[\u200B-\u200D\uFEFF]/g, "") // Zero-width spaces
+          // Remove standalone square boxes and similar symbols
+          .replace(/[□■▪▫]/g, "")
+          // Normalize line breaks and excessive whitespace
+          .replace(/[\r\n]+/g, " ") // Replace all line breaks with single space
+          .replace(/\s+/g, " ") // Replace multiple spaces with single space
+          .trim();
+
+        return text;
+      }
+
       async function processPDF(file) {
         pdfStatus.textContent = "Loading PDF...";
 
@@ -1644,7 +1786,10 @@
             fullText += pageText + " ";
           }
 
-          textInput.value = fullText.trim();
+          // Clean up the extracted text
+          fullText = cleanPDFText(fullText);
+
+          textInput.value = fullText;
 
           // Set document title from filename if empty
           if (!docTitleInput.value) {
@@ -1748,7 +1893,12 @@
             <li class="history-item" data-id="${doc.id}">
               <div class="history-item-info">
                 <span class="history-item-title">${escapeHtml(doc.title)}</span>
-                <span class="history-item-meta">${progressPercent}% | ${doc.wordCount} words | ${doc.savedAt}</span>
+                <span class="history-item-meta">
+                  <div class="progress-circle" style="background: conic-gradient(#e63946 ${
+                    progressPercent * 3.6
+                  }deg, #222 0deg);"></div>
+                  ${progressPercent}% | ${doc.wordCount} words | ${doc.savedAt}
+                </span>
               </div>
               <div class="history-item-actions">
                 <button onclick="loadFromHistory(${doc.id})">Load</button>

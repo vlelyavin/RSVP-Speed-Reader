@@ -1,0 +1,92 @@
+/* RSVP Speed Reader - Welcome Popup Styles */
+
+/* === WELCOME POPUP === */
+.welcome-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 300;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.welcome-popup-overlay.active {
+  display: flex;
+}
+
+.welcome-popup {
+  background-color: #0a0a0a;
+  border: 1px solid #333;
+  border-radius: 7px;
+  max-width: 500px;
+  width: 100%;
+  padding: 30px;
+  position: relative;
+}
+
+.welcome-popup-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: transparent;
+  border: none;
+  color: #666;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 5px;
+  line-height: 1;
+  transition: color 0.2s ease-out;
+}
+
+.welcome-popup-close:hover {
+  color: #fff;
+}
+
+.welcome-popup-title {
+  color: #fff;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.welcome-popup-content {
+  color: #ccc;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+.welcome-popup-content p {
+  margin-bottom: 15px;
+}
+
+.welcome-popup-content strong {
+  color: #fff;
+}
+
+.welcome-popup-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.welcome-popup-button {
+  background-color: #e63946;
+  color: #fff;
+  border: none;
+  padding: 12px 30px;
+  font-family: "Golos Text", sans-serif;
+  font-size: 0.9rem;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+}
+
+.welcome-popup-button:hover {
+  background-color: #f14d5a;
+  transform: scale(1.05);
+}

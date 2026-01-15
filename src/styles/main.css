@@ -1,0 +1,274 @@
+/* RSVP Speed Reader - Main Styles */
+
+/* === BASE STYLES === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  overflow: hidden;
+}
+
+body {
+  font-family: "Golos Text", sans-serif;
+  background-color: #000000;
+  color: #ffffff;
+  min-height: 100vh;
+}
+
+/* === INPUT INTERFACE === */
+.input-interface {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 20px;
+  transition: opacity 0.3s ease-out;
+}
+
+.input-interface-content {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.input-interface.hidden {
+  display: none;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+h1 {
+  font-size: 3rem;
+  width: 100%;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  text-align: left;
+  font-weight: normal;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+/* === TEXT INPUT AREA === */
+.text-input-area-wrapper {
+  position: relative;
+  display: flex;
+}
+
+.text-input-area {
+  width: 100%;
+  height: 40vh;
+  background-color: #000000;
+  border: 1px solid #333;
+  color: #ffffff;
+  font-family: "Golos Text", sans-serif;
+  font-size: 0.9rem;
+  border-radius: 7px;
+  padding: 15px 15px 65px;
+  resize: none;
+  transition: border-color 0.2s ease-out;
+}
+
+.text-input-area:focus {
+  outline: none;
+  border-color: #e63946;
+}
+
+.text-input-area::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* === INPUT PANEL === */
+.input-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 20px;
+  max-width: 750px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field label,
+.input-panel > label {
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+.field input[type="text"] {
+  background-color: #000;
+  border: 1px solid #333;
+  color: #fff;
+  padding: 12px 15px;
+  font-family: "Golos Text", sans-serif;
+  font-size: 0.9rem;
+  border-radius: 7px;
+  transition: border-color 0.2s ease-out;
+}
+
+.field input[type="text"]:focus {
+  outline: none;
+  border-color: #e63946;
+}
+
+.field input[type="text"]::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* === FILE UPLOAD === */
+.file-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 10px;
+  position: absolute;
+  bottom: 1px;
+  left: 1px;
+  right: 1px;
+  background: #000;
+  padding: 15px;
+  border-radius: 7px;
+  width: calc(100% - 2px);
+}
+
+.file-row input[type="file"] {
+  display: none;
+}
+
+.file-button {
+  background-color: #333;
+  color: #fff;
+  padding: 8px 16px;
+  font-family: "Golos Text", sans-serif;
+  font-size: 0.8rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-out;
+}
+
+.file-button:hover {
+  background-color: #444;
+}
+
+.file-status {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* === INPUT CONTROLS === */
+.input-controls {
+  display: flex;
+  gap: 16px;
+}
+
+.input-controls button {
+  padding: 12px 45px;
+  font-family: "Golos Text", sans-serif;
+  font-size: 0.9rem;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+  border: none;
+}
+
+.input-controls button.primary {
+  background-color: #e63946;
+  color: #fff;
+}
+
+.input-controls button.primary:hover {
+  background-color: #f14d5a;
+}
+
+.input-controls button:not(.primary) {
+  background-color: #333;
+  color: #fff;
+}
+
+.input-controls button:not(.primary):hover {
+  background-color: #444;
+}
+
+/* === DROP OVERLAY === */
+.drop-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.9);
+  color: #fff;
+  font-size: 1.5rem;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  border: 3px dashed #e63946;
+  margin: 20px;
+  border-radius: 10px;
+}
+
+.drop-overlay.active {
+  display: flex;
+}
+
+/* === SETTINGS (Legacy, kept for compatibility) === */
+.settings-panel {
+  display: none;
+}
+
+.mobile-settings {
+  display: none;
+}
+
+/* === SLIDER CONTROLS === */
+.slider {
+  flex: 1;
+  height: 4px;
+  background: #1a1a1a;
+  border-radius: 7px;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  background: #e63946;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: #e63946;
+  cursor: pointer;
+  border-radius: 50%;
+  border: none;
+}
+
+.slider-value {
+  color: #ffffff;
+  min-width: 60px;
+  white-space: nowrap;
+  text-align: left;
+  font-family: "Golos Text", sans-serif;
+}

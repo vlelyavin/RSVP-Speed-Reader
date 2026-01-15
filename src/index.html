@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RSVP Speed Reader</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet" />
+
+    <!-- CSS Modules -->
+    <link rel="stylesheet" href="./styles/main.css" />
+    <link rel="stylesheet" href="./styles/sidebars.css" />
+    <link rel="stylesheet" href="./styles/welcome-popup.css" />
+    <link rel="stylesheet" href="./styles/reading-interface.css" />
+    <link rel="stylesheet" href="./styles/responsive.css" />
+  </head>
+  <body>
+    <!-- Welcome Popup -->
+    <div class="welcome-popup-overlay" id="welcomePopupOverlay">
+      <div class="welcome-popup">
+        <button class="welcome-popup-close" id="welcomePopupClose">&times;</button>
+        <h2 class="welcome-popup-title">Quick Guide</h2>
+        <div class="welcome-popup-content">
+          <p>
+            <strong>Welcome to RSVP Speed Reader!</strong> This app helps you read faster by displaying one word at a
+            time.
+          </p>
+          <p>
+            <strong>Getting started:</strong> Paste your text or upload a PDF file, then click Start to begin reading.
+          </p>
+          <p>
+            <strong>Adjust settings:</strong> Hover over the left edge to open reader settings where you can change font
+            size, reading speed, and punctuation pauses.
+          </p>
+          <p>
+            <strong>View history:</strong> Hover over the right edge to access your saved documents and resume where you
+            left off.
+          </p>
+          <p>
+            <strong>Keyboard shortcuts:</strong> Press Space to pause/play, R to reset, and arrow keys to step through
+            words.
+          </p>
+        </div>
+        <div class="welcome-popup-actions">
+          <button class="welcome-popup-button" id="welcomePopupOk">Got it!</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overlay for darkening when sidebar is open -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Left Sidebar - Settings -->
+    <div class="sidebar-left" id="sidebarLeft">
+      <div class="sidebar-left-tab">Open reader settings</div>
+      <div class="sidebar-left-content">
+        <p class="sidebar-title">Reader settings</p>
+        <div class="sidebar-settings">
+          <div class="sidebar-setting">
+            <label class="sidebar-setting-label">Font size</label>
+            <div class="sidebar-setting-slider-wrapper">
+              <span class="slider-value" id="fontSizeValue">70px</span>
+              <input type="range" class="slider" id="fontSizeSlider" min="24" max="120" value="70" />
+            </div>
+          </div>
+          <div class="sidebar-setting">
+            <label class="sidebar-setting-label">Reading speed</label>
+            <div class="sidebar-setting-slider-wrapper">
+              <span class="slider-value" id="speedValue">300wpm</span>
+              <input type="range" class="slider" id="speedSlider" min="100" max="1000" step="10" value="200" />
+            </div>
+          </div>
+          <div class="sidebar-setting">
+            <label class="sidebar-setting-label">Punctuation pause</label>
+            <div class="sidebar-setting-slider-wrapper">
+              <span class="slider-value" id="punctuationValue">300ms</span>
+              <input type="range" class="slider" id="punctuationSlider" min="0" step="25" max="1000" value="300" />
+            </div>
+          </div>
+        </div>
+        <div class="hint">
+          <div class="hint-item"><span>Space</span> start/pause</div>
+          <div class="hint-item"><span>R</span> reset</div>
+          <div class="hint-item"><span>← →</span> step words</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Sidebar - History -->
+    <div class="sidebar-right" id="sidebarRight">
+      <div class="sidebar-right-tab">Open history</div>
+      <div class="sidebar-right-content">
+        <div class="history-header">
+          <p class="history-title">History</p>
+          <button id="clearHistoryBtn" class="ghost">Clear</button>
+        </div>
+        <p class="history-empty" id="historyEmpty">No saved docs yet.</p>
+        <ul class="history-list" id="historyList"></ul>
+      </div>
+    </div>
+
+    <!-- Input Interface -->
+    <div class="input-interface" id="inputInterface">
+      <section class="input-panel">
+        <h1>RSVP Speed Reader</h1>
+        <div class="field">
+          <label for="docTitle">Enter title to save the doc</label>
+          <input id="docTitle" type="text" placeholder="Give this doc a name" />
+        </div>
+
+        <label for="textInput">Paste the text or upload file</label>
+        <div class="text-input-area-wrapper">
+          <textarea class="text-input-area" id="textInput" placeholder="Paste any text you want here"></textarea>
+
+          <div class="file-row">
+            <input id="pdfInput" type="file" accept="application/pdf" />
+            <label class="file-button" for="pdfInput">Upload PDF file</label>
+            <p class="file-status" id="pdfStatus">No file yet</p>
+          </div>
+        </div>
+
+        <div class="input-controls">
+          <button id="startBtn" class="primary" data-action="start">Start</button>
+          <button id="resetBtn" data-action="reset">Reset</button>
+        </div>
+      </section>
+
+      <div class="drop-overlay" id="dropOverlay">Drop a PDF to load</div>
+    </div>
+
+    <!-- Reading Interface -->
+    <div class="reading-interface" id="readingInterface">
+      <div class="guide-lines">
+        <div class="guide-line-top"></div>
+        <div class="guide-line-bottom"></div>
+        <div class="guide-line-vertical-top"></div>
+        <div class="guide-line-vertical-bottom"></div>
+      </div>
+      <div class="word-display-container">
+        <div class="word-display" id="wordDisplay"></div>
+      </div>
+      <div class="controls">
+        <div class="progress-bar-container">
+          <div class="progress-percentage" id="progressPercentage">0.00%</div>
+          <div class="progress-bar-wrapper" id="progressBarWrapper">
+            <div class="progress-bar-fill" id="progressBarFill"></div>
+          </div>
+          <div class="progress-controls-hint">
+            <div class="hint-item"><span>Space</span> start/pause</div>
+            <div class="hint-item"><span>R</span> reset</div>
+            <div class="hint-item"><span>← →</span> step words</div>
+          </div>
+        </div>
+        <div class="controls-row">
+          <button class="control-button" id="pauseButton">Pause</button>
+          <button class="control-button" id="resetButton">Reset</button>
+          <button class="control-button" id="stopButton">Stop</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- JavaScript Module -->
+    <script type="module" src="./js/main.js"></script>
+  </body>
+</html>

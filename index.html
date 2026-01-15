@@ -6,7 +6,7 @@
     <title>RSVP Speed Reader</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet" />
     <style>
       * {
         margin: 0;
@@ -15,19 +15,19 @@
       }
 
       body {
-        font-family: "Inter", sans-serif;
+        font-family: "Golos Text", sans-serif;
         background-color: #000000;
         color: #ffffff;
-        overflow: hidden;
-        height: 100vh;
+        min-height: 100vh;
       }
 
       /* Input Interface */
       .input-interface {
         display: flex;
         flex-direction: column;
-        height: 100vh;
+        min-height: 100vh;
         padding: 20px;
+        /* padding-left: 220px; */
         transition: opacity 0.3s ease-out;
       }
 
@@ -54,44 +54,53 @@
         width: 100%;
         margin-bottom: 20px;
         margin-top: 20px;
-        text-align: center;
+        text-align: left;
         font-weight: normal;
         font-family: Georgia, "Times New Roman", serif;
       }
 
+      .text-input-area-wrapper {
+        position: relative;
+        display: flex;
+      }
+
       .text-input-area {
         width: 100%;
-        height: 50vh;
+        height: 40vh;
         background-color: #000000;
-        border: 2px solid #1a1a1a;
+        border: 1px solid #333;
         color: #ffffff;
-        font-family: "Inter", sans-serif;
-        font-size: 16px;
-        border-radius: 4px;
-        padding: 15px;
+        font-family: "Golos Text", sans-serif;
+        font-size: 0.9rem;
+        border-radius: 7px;
+        padding: 15px 15px 65px;
         resize: none;
         transition: border-color 0.2s ease-out;
       }
 
       .text-input-area:focus {
         outline: none;
-        border-color: #ffffff;
+        border-color: #e63946;
       }
 
       .text-input-area::placeholder {
-        color: #ffffff;
+        color: rgba(255, 255, 255, 0.5);
       }
 
       .settings-panel {
-        display: grid;
+        display: none;
         grid-template-columns: repeat(3, 1fr);
         gap: 50px;
         width: 100%;
         padding: 20px;
         border: 2px solid #1a1a1a;
-        border-radius: 4px;
+        border-radius: 7px;
         margin-top: 20px;
         margin-bottom: 20px;
+      }
+
+      .mobile-settings {
+        display: none;
       }
 
       .setting-group {
@@ -103,7 +112,7 @@
       .setting-label {
         color: #ffffff;
         font-size: 0.9rem;
-        font-family: Inter, sans-serif;
+        font-family: "Golos Text", sans-serif;
       }
 
       .setting-input {
@@ -111,8 +120,8 @@
         border: 2px solid #1a1a1a;
         color: #ffffff;
         padding: 8px 13px;
-        font-family: Inter, sans-serif;
-        font-size: 1rem;
+        font-family: "Golos Text", sans-serif;
+        font-size: 0.9rem;
         transition: border-color 0.2s ease-out;
       }
 
@@ -131,7 +140,7 @@
         flex: 1;
         height: 4px;
         background: #1a1a1a;
-        border-radius: 3px;
+        border-radius: 7px;
         outline: none;
         -webkit-appearance: none;
         appearance: none;
@@ -158,8 +167,10 @@
       .slider-value {
         color: #ffffff;
         min-width: 60px;
+
+        white-space: nowrap;
         text-align: left;
-        font-family: Inter, sans-serif;
+        font-family: "Golos Text", sans-serif;
       }
 
       .start-button {
@@ -167,13 +178,13 @@
         color: #ffffff;
         border: none;
         padding: 15px 40px;
-        font-size: 1.2rem;
-        font-family: Georgia, "Times New Roman", serif;
+        font-size: 0.9rem;
+        font-family: "Golos Text", sans-serif;
         cursor: pointer;
         align-self: center;
         margin-top: 20px;
         transition: all 0.2s ease-out;
-        border-radius: 4px;
+        border-radius: 7px;
       }
 
       .start-button:hover {
@@ -185,30 +196,587 @@
         transform: scale(0.98);
       }
 
+      /* New Input Panel Styles */
+      .input-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        padding: 20px;
+        max-width: 750px;
+        width: 100%;
+        margin: 0 auto;
+      }
+
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .field label,
+      .input-panel > label {
+        color: #fff;
+        font-size: 0.9rem;
+        letter-spacing: 0.05em;
+      }
+
+      .field input[type="text"] {
+        background-color: #000;
+        border: 1px solid #333;
+        color: #fff;
+        padding: 12px 15px;
+        font-family: "Golos Text", sans-serif;
+        font-size: 0.9rem;
+        border-radius: 7px;
+        transition: border-color 0.2s ease-out;
+      }
+
+      .field input[type="text"]:focus {
+        outline: none;
+        border-color: #e63946;
+      }
+
+      .field input[type="text"]::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      .file-row {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-top: 10px;
+        position: absolute;
+        bottom: 1px;
+        left: 1px;
+        right: 1px;
+        background: #000;
+        padding: 15px;
+        border-radius: 7px;
+        width: calc(100% - 2px);
+      }
+
+      .file-row input[type="file"] {
+        display: none;
+      }
+
+      .file-button {
+        background-color: #333;
+        color: #fff;
+        padding: 8px 16px;
+        font-family: "Golos Text", sans-serif;
+        font-size: 0.8rem;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.2s ease-out;
+      }
+
+      .file-button:hover {
+        background-color: #444;
+      }
+
+      .file-status {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.75rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .toggle {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        color: #fff;
+        font-size: 0.8rem;
+        letter-spacing: 0.03em;
+      }
+
+      .toggle input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        accent-color: #e63946;
+        cursor: pointer;
+      }
+
+      .input-controls {
+        display: flex;
+        gap: 16px;
+      }
+
+      .input-controls button {
+        padding: 12px 45px;
+        font-family: "Golos Text", sans-serif;
+        font-size: 0.9rem;
+        border-radius: 7px;
+        cursor: pointer;
+        transition: all 0.2s ease-out;
+        border: none;
+      }
+
+      .input-controls button.primary {
+        background-color: #e63946;
+        color: #fff;
+      }
+
+      .input-controls button.primary:hover {
+        background-color: #f14d5a;
+      }
+
+      .input-controls button:not(.primary) {
+        background-color: #333;
+        color: #fff;
+      }
+
+      .input-controls button:not(.primary):hover {
+        background-color: #444;
+      }
+
+      /* Overlay for sidebar darkening */
+      .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0);
+        z-index: 99;
+        pointer-events: none;
+        transition: background-color 0.3s ease-out;
+      }
+
+      .sidebar-overlay.active {
+        background-color: rgba(0, 0, 0, 0.2);
+        pointer-events: auto;
+      }
+
+      /* Left Sidebar - Settings */
+      .sidebar-left {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 320px;
+        background-color: #0a0a0a;
+        border-right: 1px solid #222;
+        z-index: 150;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-out;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .sidebar-left:hover,
+      .sidebar-left.open {
+        transform: translateX(0);
+      }
+
+      .sidebar-left-tab {
+        position: absolute;
+        right: -30px;
+        top: 50%;
+        transform: translateY(-50%);
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+        background-color: #0a0a0a;
+        border: 1px solid #222;
+        border-left: none;
+        padding: 15px 8px;
+        color: #fff;
+        font-size: 0.7rem;
+        letter-spacing: 0.1em;
+        cursor: pointer;
+        border-radius: 0 7px 7px 0;
+      }
+
+      .sidebar-left:hover .sidebar-left-tab,
+      .sidebar-left.open .sidebar-left-tab {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .sidebar-left-content {
+        padding: 25px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        overflow-y: auto;
+        flex: 1;
+      }
+
+      .sidebar-title {
+        color: #fff;
+        font-size: 0.9rem;
+        letter-spacing: 0.05em;
+        margin-bottom: 10px;
+      }
+
+      .sidebar-settings {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .sidebar-setting {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .sidebar-setting-label {
+        color: #fff;
+        font-size: 0.7rem;
+        letter-spacing: 0.03em;
+      }
+
+      .sidebar-setting-slider-wrapper {
+        position: relative;
+        padding-top: 20px;
+      }
+
+      .sidebar-setting .slider {
+        width: 100%;
+        height: 3px;
+      }
+
+      .sidebar-setting .slider-value {
+        color: #fff;
+        font-size: 0.7rem;
+        position: absolute;
+        top: 0;
+        left: 0;
+        min-width: auto;
+        transform: translateX(-50%);
+        /* transition: left 0.05s ease-out; */
+        background-color: #222;
+        padding: 2px 6px;
+        border-radius: 4px;
+        white-space: nowrap;
+        pointer-events: none;
+      }
+
+      .hint {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: auto;
+        /* margin-top: 10px; */
+        /* padding-top: 25px; */
+        /* border-top: 1px solid #222; */
+      }
+
+      .hint-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #444;
+        font-size: 0.75rem;
+      }
+
+      .hint span {
+        background-color: #222;
+        padding: 3px 6px;
+        border-radius: 6px;
+        font-family: monospace;
+        color: #fff;
+        min-width: 35px;
+        text-align: center;
+        font-size: 0.7rem;
+      }
+
+      /* Right Sidebar - History */
+      .sidebar-right {
+        position: fixed;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 320px;
+        background-color: #0a0a0a;
+        border-left: 1px solid #222;
+        z-index: 150;
+        transform: translateX(100%);
+        transition: transform 0.3s ease-out;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .sidebar-right:hover,
+      .sidebar-right.open {
+        transform: translateX(0);
+      }
+
+      .sidebar-right-tab {
+        position: absolute;
+        left: -30px;
+        top: 50%;
+        transform: translateY(-50%);
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+        background-color: #0a0a0a;
+        border: 1px solid #222;
+        border-right: none;
+        padding: 15px 8px;
+        color: #fff;
+        font-size: 0.7rem;
+        letter-spacing: 0.1em;
+        cursor: pointer;
+        border-radius: 7px 0 0 7px;
+      }
+
+      .sidebar-right:hover .sidebar-right-tab,
+      .sidebar-right.open .sidebar-right-tab {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .sidebar-right-content {
+        padding: 25px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        overflow-y: auto;
+        flex: 1;
+      }
+
+      .history-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .history-title {
+        color: #fff;
+        font-size: 0.9rem;
+        letter-spacing: 0.05em;
+      }
+
+      .history-header button.ghost {
+        background: transparent;
+        border: 1px solid #333;
+        color: #fff;
+        padding: 6px 12px;
+        font-family: "Golos Text", sans-serif;
+        font-size: 0.75rem;
+        border-radius: 7px;
+        cursor: pointer;
+        transition: all 0.2s ease-out;
+      }
+
+      .history-header button.ghost:hover {
+        background-color: #222;
+      }
+
+      .history-empty {
+        color: #fff;
+        font-size: 0.8rem;
+        text-align: center;
+        padding: 20px;
+      }
+
+      .history-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .history-item {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        background-color: #111;
+        border: 1px solid #333;
+        border-left: 3px solid #e63946;
+        padding: 12px;
+        border-radius: 7px;
+      }
+
+      .history-item-info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .history-item-title {
+        color: #fff;
+        font-size: 0.85rem;
+        font-weight: 500;
+      }
+
+      .history-item-meta {
+        color: #fff;
+        font-size: 0.7rem;
+      }
+
+      .history-item-actions {
+        display: flex;
+        gap: 6px;
+      }
+
+      .history-item-actions button {
+        background-color: #333;
+        border: none;
+        color: #fff;
+        padding: 6px 12px;
+        font-family: "Golos Text", sans-serif;
+        font-size: 0.75rem;
+        border-radius: 7px;
+        cursor: pointer;
+        transition: background-color 0.2s ease-out;
+      }
+
+      .history-item-actions button:hover {
+        background-color: #444;
+      }
+
+      .history-item-actions button.delete:hover {
+        background-color: #e63946;
+      }
+
+      .drop-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.9);
+        color: #fff;
+        font-size: 1.5rem;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        border: 3px dashed #e63946;
+        margin: 20px;
+        border-radius: 10px;
+      }
+
+      .drop-overlay.active {
+        display: flex;
+      }
+
+      /* Welcome Popup */
+      .welcome-popup-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.8);
+        z-index: 300;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .welcome-popup-overlay.active {
+        display: flex;
+      }
+
+      .welcome-popup {
+        background-color: #0a0a0a;
+        border: 1px solid #333;
+        border-radius: 7px;
+        max-width: 500px;
+        width: 100%;
+        padding: 30px;
+        position: relative;
+      }
+
+      .welcome-popup-close {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: transparent;
+        border: none;
+        color: #666;
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 5px;
+        line-height: 1;
+        transition: color 0.2s ease-out;
+      }
+
+      .welcome-popup-close:hover {
+        color: #fff;
+      }
+
+      .welcome-popup-title {
+        color: #fff;
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+        font-weight: 500;
+      }
+
+      .welcome-popup-content {
+        color: #ccc;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 25px;
+      }
+
+      .welcome-popup-content p {
+        margin-bottom: 15px;
+      }
+
+      .welcome-popup-content strong {
+        color: #fff;
+      }
+
+      .welcome-popup-actions {
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .welcome-popup-button {
+        background-color: #e63946;
+        color: #fff;
+        border: none;
+        padding: 12px 30px;
+        font-family: "Golos Text", sans-serif;
+        font-size: 0.9rem;
+        border-radius: 7px;
+        cursor: pointer;
+        transition: all 0.2s ease-out;
+      }
+
+      .welcome-popup-button:hover {
+        background-color: #f14d5a;
+        transform: scale(1.05);
+      }
+
       /* Reading Interface */
       .reading-interface {
         display: none;
         flex-direction: column;
         height: 100vh;
-        position: relative;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
         background-color: #000000;
         transform-origin: center center;
-        opacity: 0;
-        transform: scale(0);
-        transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+        /* opacity: 0; */
+        /* transform: scale(0); */
+        z-index: 2;
+        /* pointer-events: none; */
       }
 
       .reading-interface.active {
         display: flex;
-        opacity: 1;
-        transform: scale(1);
+        /* opacity: 1; */
+        /* transform: scale(1); */
+        /* pointer-events: all; */
+        /* transition: opacity 0.3s ease-out, transform 0.3s ease-out; */
       }
 
-      .reading-interface.closing {
+      /* .reading-interface.closing {
         opacity: 0;
         transform: scale(0);
         transition: opacity 0.3s ease-in, transform 0.3s ease-in;
-      }
+      } */
 
       .guide-lines {
         position: absolute;
@@ -269,7 +837,7 @@
         font-size: 73px;
         line-height: 1.2;
         position: relative;
-        font-family: Georgia, "Times New Roman", serif;
+        font-family: "Golos Text", sans-serif;
         white-space: nowrap;
         display: flex;
         gap: 1px;
@@ -316,14 +884,15 @@
 
       .control-button {
         background: transparent;
-        border: 2px solid #1a1a1a;
+        border: 1px solid #333;
         color: #ffffff;
         padding: 8px 15px;
+        background: #0a0a0a;
         cursor: pointer;
-        font-family: "Inter", sans-serif;
+        font-family: "Golos Text", sans-serif;
         font-size: 0.9rem;
         transition: all 0.2s ease-out;
-        border-radius: 4px;
+        border-radius: 7px;
       }
 
       #pauseButton,
@@ -350,7 +919,7 @@
       .progress-indicator {
         color: #ffffff;
         font-size: 0.9rem;
-        font-family: Inter, sans-serif;
+        font-family: "Golos Text", sans-serif;
         margin-bottom: 5px;
       }
 
@@ -358,6 +927,7 @@
         /* Input Interface Mobile */
         .input-interface {
           padding: 15px;
+          padding-left: 15px;
         }
 
         .input-interface-content {
@@ -375,31 +945,45 @@
         }
 
         .text-input-area {
-          font-size: 14px;
-          padding: 12px;
-          height: 40vh;
-        }
-
-        .settings-panel {
-          grid-template-columns: 1fr;
-          gap: 15px;
-          padding: 15px;
-          margin-top: 15px;
-          margin-bottom: 15px;
-          width: 100%;
-        }
-
-        .setting-label {
-          font-size: 0.85rem;
-        }
-
-        .setting-input {
           font-size: 0.9rem;
-          padding: 10px 12px;
+          padding: 12px;
+          height: 30vh;
         }
 
-        .slider-value {
-          font-size: 0.85rem;
+        .input-panel {
+          padding: 15px;
+        }
+
+        .file-row {
+          gap: 10px;
+        }
+
+        .hint {
+          display: none;
+        }
+
+        .toggle {
+          font-size: 0.7rem;
+        }
+
+        .input-controls {
+          flex-wrap: wrap;
+        }
+
+        .input-controls button {
+          flex: 1;
+          min-width: 80px;
+        }
+
+        .history-item {
+          flex-direction: column;
+          gap: 10px;
+          align-items: flex-start;
+        }
+
+        .history-item-actions {
+          width: 100%;
+          justify-content: flex-start;
         }
 
         .start-button {
@@ -482,47 +1066,122 @@
     </style>
   </head>
   <body>
-    <!-- Input Interface -->
-    <div class="input-interface" id="inputInterface">
-      <div class="header">
-        <h1>RSVP Speed Reader</h1>
-      </div>
-      <textarea class="text-input-area" id="textInput" placeholder="Paste your text here..."></textarea>
-      <div class="input-interface-content">
-        <div class="settings-panel">
-          <div class="setting-group">
-            <label class="setting-label">Font Size</label>
-            <div class="slider-container">
-              <input type="range" class="slider" id="fontSizeSlider" min="24" max="120" value="72" />
-              <span class="slider-value" id="fontSizeValue">72px</span>
-            </div>
-          </div>
-          <div class="setting-group">
-            <label class="setting-label">Reading Speed (WPM)</label>
-            <div class="slider-container">
-              <input type="range" class="slider" id="speedSlider" min="100" max="1000" step="10" value="300" />
-              <span class="slider-value" id="speedValue">300 wpm</span>
-            </div>
-          </div>
-          <div class="setting-group">
-            <label class="setting-label">Punctuation Pause</label>
-            <div class="slider-container">
-              <input type="range" class="slider" id="punctuationSlider" min="0" step="5" max="500" value="150" />
-              <span class="slider-value" id="punctuationValue">150ms</span>
-            </div>
-          </div>
-          <!-- <div class="setting-group">
-            <label class="setting-label">Font Family</label>
-            <select class="setting-input" id="fontFamilySelect">
-              <option value="'Times New Roman', Times, Georgia, serif">Times New Roman</option>
-              <option value="Georgia, 'Times New Roman', serif">Georgia</option>
-              <option value="Garamond, 'Times New Roman', serif">Garamond</option>
-              <option value="Palatino, 'Times New Roman', serif">Palatino</option>
-            </select>
-          </div> -->
+    <!-- Welcome Popup -->
+    <div class="welcome-popup-overlay" id="welcomePopupOverlay">
+      <div class="welcome-popup">
+        <button class="welcome-popup-close" id="welcomePopupClose">&times;</button>
+        <h2 class="welcome-popup-title">Quick Guide</h2>
+        <div class="welcome-popup-content">
+          <p>
+            <strong>Welcome to RSVP Speed Reader!</strong> This app helps you read faster by displaying one word at a
+            time.
+          </p>
+          <p>
+            <strong>Getting started:</strong> Paste your text or upload a PDF file, then click Start to begin reading.
+          </p>
+          <p>
+            <strong>Adjust settings:</strong> Hover over the left edge to open reader settings where you can change font
+            size, reading speed, and punctuation pauses.
+          </p>
+          <p>
+            <strong>View history:</strong> Hover over the right edge to access your saved documents and resume where you
+            left off.
+          </p>
+          <p>
+            <strong>Keyboard shortcuts:</strong> Press Space to pause/play, R to reset, and arrow keys to step through
+            words.
+          </p>
+        </div>
+        <div class="welcome-popup-actions">
+          <button class="welcome-popup-button" id="welcomePopupOk">Got it!</button>
         </div>
       </div>
-      <button class="start-button" id="startButton">Start Reading</button>
+    </div>
+
+    <!-- Overlay for darkening when sidebar is open -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Left Sidebar - Settings -->
+    <div class="sidebar-left" id="sidebarLeft">
+      <div class="sidebar-left-tab">Open reader settings</div>
+      <div class="sidebar-left-content">
+        <p class="sidebar-title">Reader settings</p>
+        <div class="sidebar-settings">
+          <div class="sidebar-setting">
+            <label class="sidebar-setting-label">Font size</label>
+            <div class="sidebar-setting-slider-wrapper">
+              <span class="slider-value" id="fontSizeValue">70px</span>
+              <input type="range" class="slider" id="fontSizeSlider" min="24" max="120" value="70" />
+            </div>
+          </div>
+          <div class="sidebar-setting">
+            <label class="sidebar-setting-label">Reading speed</label>
+            <div class="sidebar-setting-slider-wrapper">
+              <span class="slider-value" id="speedValue">300wpm</span>
+              <input type="range" class="slider" id="speedSlider" min="100" max="1000" step="10" value="200" />
+            </div>
+          </div>
+          <div class="sidebar-setting">
+            <label class="sidebar-setting-label">Punctuation pause</label>
+            <div class="sidebar-setting-slider-wrapper">
+              <span class="slider-value" id="punctuationValue">300ms</span>
+              <input type="range" class="slider" id="punctuationSlider" min="0" step="25" max="1000" value="300" />
+            </div>
+          </div>
+        </div>
+        <div class="hint">
+          <div class="hint-item"><span>Space</span> start/pause</div>
+          <div class="hint-item"><span>R</span> reset</div>
+          <div class="hint-item"><span>← →</span> step words</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Sidebar - History -->
+    <div class="sidebar-right" id="sidebarRight">
+      <div class="sidebar-right-tab">Open history</div>
+      <div class="sidebar-right-content">
+        <div class="history-header">
+          <p class="history-title">History</p>
+          <button id="clearHistoryBtn" class="ghost">Clear</button>
+        </div>
+        <p class="history-empty" id="historyEmpty">No saved docs yet.</p>
+        <ul class="history-list" id="historyList"></ul>
+      </div>
+    </div>
+
+    <!-- Input Interface -->
+    <div class="input-interface" id="inputInterface">
+      <section class="input-panel">
+        <h1>RSVP Speed Reader</h1>
+        <div class="field">
+          <label for="docTitle">Enter title to save the doc</label>
+          <input id="docTitle" type="text" placeholder="Give this doc a name" />
+        </div>
+
+        <label for="textInput">Paste the text or upload file</label>
+        <div class="text-input-area-wrapper">
+          <textarea class="text-input-area" id="textInput" placeholder="Paste any text you want here"></textarea>
+
+          <div class="file-row">
+            <input id="pdfInput" type="file" accept="application/pdf" />
+            <label class="file-button" for="pdfInput">Upload PDF file</label>
+            <p class="file-status" id="pdfStatus">No file yet</p>
+          </div>
+        </div>
+
+        <!-- <label class="toggle">
+          <input id="ocrToggle" type="checkbox" />
+          <span>OCR scanned PDFs (slower, but reads image-only pages)</span>
+        </label> -->
+
+        <div class="input-controls">
+          <button id="startBtn" class="primary" data-action="start">Start</button>
+          <button id="resetBtn" data-action="reset">Reset</button>
+        </div>
+      </section>
+
+      <div class="drop-overlay" id="dropOverlay">Drop a PDF to load</div>
     </div>
 
     <!-- Reading Interface -->
@@ -540,12 +1199,13 @@
         <div class="progress-indicator" id="progressIndicator">0 / 0</div>
         <div class="controls-row">
           <button class="control-button" id="pauseButton">Pause</button>
+          <button class="control-button" id="resetButton">Reset</button>
           <button class="control-button" id="stopButton">Stop</button>
-          <div class="speed-controls">
+          <!-- <div class="speed-controls">
             <button class="control-button" id="speedDown">−</button>
-            <span class="speed-display" id="speedDisplay">300 wpm</span>
+            <span class="speed-display" id="speedDisplay">300wpm</span>
             <button class="control-button" id="speedUp">+</button>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -557,6 +1217,7 @@
         currentIndex: 0,
         isPlaying: false,
         timeoutId: null,
+        currentDocId: null,
         settings: {
           fontSize: 72, // Will be adjusted based on device type in loadSettings
           speed: 300,
@@ -571,23 +1232,43 @@
       const guideLines = document.querySelector(".guide-lines");
       const textInput = document.getElementById("textInput");
       const wordDisplay = document.getElementById("wordDisplay");
-      const startButton = document.getElementById("startButton");
+      const startButton = document.getElementById("startBtn");
+      const resetButton = document.getElementById("resetButton");
       const pauseButton = document.getElementById("pauseButton");
       const stopButton = document.getElementById("stopButton");
-      // const fullscreenToggle = document.getElementById("fullscreenToggle");
-      const speedDisplay = document.getElementById("speedDisplay");
+      // const speedDisplay = document.getElementById("speedDisplay");
       const progressIndicator = document.getElementById("progressIndicator");
 
-      // Settings elements
+      // New input panel elements
+      const docTitleInput = document.getElementById("docTitle");
+      const pdfInput = document.getElementById("pdfInput");
+      const pdfStatus = document.getElementById("pdfStatus");
+      const startBtn = document.getElementById("startBtn");
+      const resetBtn = document.getElementById("resetBtn");
+      const clearHistoryBtn = document.getElementById("clearHistoryBtn");
+      const historyEmpty = document.getElementById("historyEmpty");
+      const historyList = document.getElementById("historyList");
+      const dropOverlay = document.getElementById("dropOverlay");
+
+      // Settings elements (sidebar)
       const fontSizeSlider = document.getElementById("fontSizeSlider");
       const fontSizeValue = document.getElementById("fontSizeValue");
       const speedSlider = document.getElementById("speedSlider");
       const speedValue = document.getElementById("speedValue");
       const punctuationSlider = document.getElementById("punctuationSlider");
       const punctuationValue = document.getElementById("punctuationValue");
-      // const fontFamilySelect = document.getElementById("fontFamilySelect");
-      const speedUp = document.getElementById("speedUp");
-      const speedDown = document.getElementById("speedDown");
+      // const speedUp = document.getElementById("speedUp");
+      // const speedDown = document.getElementById("speedDown");
+
+      // Sidebar elements
+      const sidebarLeft = document.getElementById("sidebarLeft");
+      const sidebarRight = document.getElementById("sidebarRight");
+      const sidebarOverlay = document.getElementById("sidebarOverlay");
+
+      // Welcome popup elements
+      const welcomePopupOverlay = document.getElementById("welcomePopupOverlay");
+      const welcomePopupClose = document.getElementById("welcomePopupClose");
+      const welcomePopupOk = document.getElementById("welcomePopupOk");
 
       // Load settings from localStorage
       function loadSettings() {
@@ -604,10 +1285,9 @@
         fontSizeSlider.value = state.settings.fontSize;
         fontSizeValue.textContent = state.settings.fontSize + "px";
         speedSlider.value = state.settings.speed;
-        speedValue.textContent = state.settings.speed + " wpm";
+        speedValue.textContent = state.settings.speed + "wpm";
         punctuationSlider.value = state.settings.punctuationPause;
         punctuationValue.textContent = state.settings.punctuationPause + "ms";
-        // fontFamilySelect.value = state.settings.fontFamily;
       }
 
       // Save settings to localStorage
@@ -790,15 +1470,32 @@
           return;
         }
 
-        state.words = parseText(text);
-        state.currentIndex = 0;
+        // Always parse words from current text
+        const newWords = parseText(text);
+
+        // If words changed, reset index
+        if (state.words.length !== newWords.length || state.words.join(" ") !== newWords.join(" ")) {
+          state.words = newWords;
+          if (state.currentIndex >= state.words.length) {
+            state.currentIndex = 0;
+          }
+        } else if (state.words.length === 0) {
+          state.words = newWords;
+          state.currentIndex = 0;
+        }
+
+        // Save to history when starting (check for duplicate title)
+        if (!saveToHistory()) {
+          return; // Stop if duplicate title
+        }
+
         state.isPlaying = true;
 
         inputInterface.classList.add("hidden");
         readingInterface.classList.remove("closing");
         readingInterface.classList.add("active");
 
-        updateWPMDisplay();
+        // updateWPMDisplay();
         showNextWord();
       }
 
@@ -816,8 +1513,10 @@
 
       // Stop reading
       function stopReading() {
+        // Save progress before stopping (skip duplicate check since we're updating)
+        saveToHistory(true);
+
         state.isPlaying = false;
-        state.currentIndex = 0;
         clearTimeout(state.timeoutId);
 
         pauseButton.textContent = "Pause";
@@ -831,12 +1530,17 @@
           readingInterface.classList.remove("closing");
           inputInterface.classList.remove("hidden");
         }, 300);
+
+        // Reset state for next reading session
+        state.currentDocId = null;
+        state.words = [];
+        state.currentIndex = 0;
       }
 
       // Update WPM display
-      function updateWPMDisplay() {
-        speedDisplay.textContent = state.settings.speed + " wpm";
-      }
+      // function updateWPMDisplay() {
+      //   speedDisplay.textContent = state.settings.speed + " wpm";
+      // }
 
       // Adjust speed
       function adjustSpeed(delta) {
@@ -844,7 +1548,7 @@
         state.settings.speed = newSpeed;
         speedSlider.value = newSpeed;
         speedValue.textContent = newSpeed + " wpm";
-        updateWPMDisplay();
+        // updateWPMDisplay();
         saveSettings();
       }
 
@@ -861,68 +1565,458 @@
 
       // Event listeners
       startButton.addEventListener("click", startReading);
+      resetButton.addEventListener("click", resetProgress);
       pauseButton.addEventListener("click", togglePause);
       stopButton.addEventListener("click", stopReading);
-      // fullscreenToggle.addEventListener("click", toggleFullscreen);
+      resetBtn.addEventListener("click", resetInput);
 
-      // Settings event listeners
+      // PDF upload functionality
+      pdfInput.addEventListener("change", handlePDFUpload);
+
+      // Drag and drop for PDF
+      document.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        dropOverlay.classList.add("active");
+      });
+
+      document.addEventListener("dragleave", (e) => {
+        if (e.relatedTarget === null || !document.contains(e.relatedTarget)) {
+          dropOverlay.classList.remove("active");
+        }
+      });
+
+      document.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dropOverlay.classList.remove("active");
+        const file = e.dataTransfer.files[0];
+        if (file && file.type === "application/pdf") {
+          processPDF(file);
+        }
+      });
+
+      // History functions
+      clearHistoryBtn.addEventListener("click", clearHistory);
+
+      // Reset input - clears title and textarea
+      function resetInput() {
+        state.currentIndex = 0;
+        state.isPlaying = false;
+        state.words = [];
+        state.currentDocId = null;
+        clearTimeout(state.timeoutId);
+        textInput.value = "";
+        docTitleInput.value = "";
+        pdfStatus.textContent = "No PDF loaded";
+        if (readingInterface.classList.contains("active")) {
+          stopReading();
+        }
+      }
+
+      // Handle PDF upload
+      async function handlePDFUpload(e) {
+        const file = e.target.files[0];
+        if (file) {
+          processPDF(file);
+        }
+      }
+
+      // Process PDF file
+      async function processPDF(file) {
+        pdfStatus.textContent = "Loading PDF...";
+
+        try {
+          // Load PDF.js history dynamically if not already loaded
+          if (!window.pdfjsLib) {
+            await loadPDFJS();
+          }
+
+          const arrayBuffer = await file.arrayBuffer();
+          const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+          let fullText = "";
+          const totalPages = pdf.numPages;
+
+          for (let i = 1; i <= totalPages; i++) {
+            pdfStatus.textContent = `Processing page ${i}/${totalPages}...`;
+            const page = await pdf.getPage(i);
+            const textContent = await page.getTextContent();
+            const pageText = textContent.items.map((item) => item.str).join(" ");
+            fullText += pageText + " ";
+          }
+
+          textInput.value = fullText.trim();
+
+          // Set document title from filename if empty
+          if (!docTitleInput.value) {
+            docTitleInput.value = file.name.replace(".pdf", "");
+          }
+
+          const wordCount = parseText(fullText).length;
+          pdfStatus.textContent = `${file.name}`;
+        } catch (error) {
+          console.error("Error processing PDF:", error);
+          pdfStatus.textContent = "Error loading PDF. Try a different file.";
+        }
+      }
+
+      // Load PDF.js history
+      function loadPDFJS() {
+        return new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
+          script.onload = () => {
+            pdfjsLib.GlobalWorkerOptions.workerSrc =
+              "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+            resolve();
+          };
+          script.onerror = reject;
+          document.head.appendChild(script);
+        });
+      }
+
+      // History management
+      function getHistory() {
+        const saved = localStorage.getItem("rsvpHistory");
+        return saved ? JSON.parse(saved) : [];
+      }
+
+      function saveHistory(history) {
+        localStorage.setItem("rsvpHistory", JSON.stringify(history));
+        renderHistory();
+      }
+
+      function saveToHistory(skipDuplicateCheck = false) {
+        const text = textInput.value.trim();
+        const title = docTitleInput.value.trim() || "Untitled Document";
+        if (!text) return true;
+
+        const history = getHistory();
+
+        // Check if we're updating existing doc by ID
+        let existingIndex = -1;
+        if (state.currentDocId) {
+          existingIndex = history.findIndex((doc) => doc.id === state.currentDocId);
+        }
+
+        // // If not updating by ID, check for duplicate title
+        // if (existingIndex === -1 && !skipDuplicateCheck) {
+        //   const duplicateIndex = history.findIndex((doc) => doc.title === title);
+        //   if (duplicateIndex !== -1) {
+        //     alert("A document with this title already exists. Please enter a different title.");
+        //     docTitleInput.focus();
+        //     return false;
+        //   }
+        // }
+
+        const docId = existingIndex >= 0 ? history[existingIndex].id : Date.now();
+        state.currentDocId = docId;
+
+        const doc = {
+          id: docId,
+          title: title,
+          text: text,
+          wordCount: parseText(text).length,
+          progress: state.currentIndex,
+          savedAt: new Date().toLocaleString(),
+        };
+
+        if (existingIndex >= 0) {
+          history[existingIndex] = doc;
+        } else {
+          history.unshift(doc);
+        }
+
+        saveHistory(history);
+        return true;
+      }
+
+      function renderHistory() {
+        const history = getHistory();
+
+        if (history.length === 0) {
+          historyEmpty.style.display = "block";
+          historyList.innerHTML = "";
+          return;
+        }
+
+        historyEmpty.style.display = "none";
+        historyList.innerHTML = history
+          .map((doc) => {
+            const progressPercent =
+              doc.progress && doc.wordCount ? Math.round((doc.progress / doc.wordCount) * 100) : 0;
+            return `
+            <li class="history-item" data-id="${doc.id}">
+              <div class="history-item-info">
+                <span class="history-item-title">${escapeHtml(doc.title)}</span>
+                <span class="history-item-meta">${progressPercent}% | ${doc.wordCount} words | ${doc.savedAt}</span>
+              </div>
+              <div class="history-item-actions">
+                <button onclick="loadFromHistory(${doc.id})">Load</button>
+                <button onclick="resetFromHistory(${doc.id})">Reset</button>
+                <button class="delete" onclick="deleteFromHistory(${doc.id})">Delete</button>
+              </div>
+            </li>
+          `;
+          })
+          .join("");
+      }
+
+      function loadFromHistory(id) {
+        const history = getHistory();
+        const doc = history.find((d) => d.id === id);
+        if (doc) {
+          textInput.value = doc.text;
+          docTitleInput.value = doc.title;
+          state.currentDocId = doc.id;
+          state.currentIndex = doc.progress || 0;
+          state.words = parseText(doc.text);
+          // Scroll to top of page
+          window.scrollTo(0, 0);
+        }
+      }
+
+      function resetFromHistory(id) {
+        const history = getHistory();
+
+        const docIndex = history.findIndex((d) => d.id === id);
+        console.log(docIndex);
+
+        if (docIndex != null) {
+          history[docIndex].progress = 0;
+          saveHistory(history);
+          // textInput.value = doc.text;
+          // docTitleInput.value = doc.title;
+          // state.currentDocId = doc.id;
+          // state.currentIndex = 0;
+          // state.words = parseText(doc.text);
+          // // Start reading from beginning
+          // startReading();
+        }
+      }
+
+      function deleteFromHistory(id) {
+        const history = getHistory().filter((d) => d.id !== id);
+        saveHistory(history);
+      }
+
+      function clearHistory() {
+        if (confirm("Are you sure you want to clear all saved documents?")) {
+          localStorage.removeItem("rsvpHistory");
+          renderHistory();
+        }
+      }
+
+      // Make history functions global
+      window.loadFromHistory = loadFromHistory;
+      window.resetFromHistory = resetFromHistory;
+      window.deleteFromHistory = deleteFromHistory;
+
+      // Update slider value position based on thumb position
+      function updateSliderValuePosition(slider, valueElement) {
+        const min = parseFloat(slider.min);
+        const max = parseFloat(slider.max);
+        const value = parseFloat(slider.value);
+
+        // Calculate percentage (0 to 1)
+        const percentage = (value - min) / (max - min);
+
+        // Account for thumb size (16px width, so 8px on each side)
+        // The thumb's center position needs adjustment at the edges
+        const thumbWidth = 16;
+        const sliderWidth = slider.offsetWidth;
+        const availableWidth = sliderWidth - thumbWidth;
+
+        // Calculate pixel position
+        const position = percentage * availableWidth + thumbWidth / 2;
+
+        valueElement.style.left = `${position}px`;
+      }
+
+      // Settings event listeners (sidebar)
       fontSizeSlider.addEventListener("input", (e) => {
         state.settings.fontSize = parseInt(e.target.value);
         fontSizeValue.textContent = state.settings.fontSize + "px";
+        updateSliderValuePosition(fontSizeSlider, fontSizeValue);
         saveSettings();
       });
 
       speedSlider.addEventListener("input", (e) => {
         state.settings.speed = parseInt(e.target.value);
         speedValue.textContent = state.settings.speed + " wpm";
-        updateWPMDisplay();
+        updateSliderValuePosition(speedSlider, speedValue);
+        // updateWPMDisplay();
         saveSettings();
       });
 
       punctuationSlider.addEventListener("input", (e) => {
         state.settings.punctuationPause = parseInt(e.target.value);
         punctuationValue.textContent = state.settings.punctuationPause + "ms";
+        updateSliderValuePosition(punctuationSlider, punctuationValue);
         saveSettings();
       });
 
-      // fontFamilySelect.addEventListener("change", (e) => {
-      //   state.settings.fontFamily = e.target.value;
-      //   saveSettings();
-      // });
+      // speedUp.addEventListener("click", () => adjustSpeed(50));
+      // speedDown.addEventListener("click", () => adjustSpeed(-50));
 
-      speedUp.addEventListener("click", () => adjustSpeed(50));
-      speedDown.addEventListener("click", () => adjustSpeed(-50));
+      // Step to previous word (pauses playback)
+      function stepPrevWord() {
+        if (state.words.length === 0) return;
+
+        // Pause if playing
+        if (state.isPlaying) {
+          state.isPlaying = false;
+          clearTimeout(state.timeoutId);
+          pauseButton.textContent = "Resume";
+        }
+
+        // Move to previous word
+        if (state.currentIndex > 0) {
+          state.currentIndex--;
+          displayWord(state.words[state.currentIndex]);
+          updateProgress();
+        }
+      }
+
+      // Step to next word (pauses playback)
+      function stepNextWord() {
+        if (state.words.length === 0) return;
+
+        // Pause if playing
+        if (state.isPlaying) {
+          state.isPlaying = false;
+          clearTimeout(state.timeoutId);
+          pauseButton.textContent = "Resume";
+        }
+
+        // Move to next word
+        if (state.currentIndex < state.words.length - 1) {
+          state.currentIndex++;
+          displayWord(state.words[state.currentIndex]);
+          updateProgress();
+        }
+      }
+
+      // Reset progress during reading (pauses and resets to beginning)
+      function resetProgress() {
+        if (state.words.length === 0) return;
+
+        // Pause if playing
+        if (state.isPlaying) {
+          state.isPlaying = false;
+          clearTimeout(state.timeoutId);
+          pauseButton.textContent = "Resume";
+        }
+
+        // Reset to beginning
+        state.currentIndex = 0;
+        displayWord(state.words[state.currentIndex]);
+        updateProgress();
+      }
 
       // Keyboard shortcuts
       document.addEventListener("keydown", (e) => {
-        // Only handle shortcuts when reading interface is active
-        if (!readingInterface.classList.contains("active")) {
+        // Handle shortcuts in reading interface
+        if (readingInterface.classList.contains("active")) {
+          switch (e.key) {
+            case " ":
+              e.preventDefault();
+              togglePause();
+              break;
+            case "r":
+            case "R":
+              e.preventDefault();
+              resetProgress();
+              break;
+            case "ArrowLeft":
+              e.preventDefault();
+              stepPrevWord();
+              break;
+            case "ArrowRight":
+              e.preventDefault();
+              stepNextWord();
+              break;
+            case "Escape":
+              e.preventDefault();
+              stopReading();
+              break;
+            case "ArrowUp":
+              e.preventDefault();
+              adjustSpeed(50);
+              break;
+            case "ArrowDown":
+              e.preventDefault();
+              adjustSpeed(-50);
+              break;
+          }
           return;
         }
 
-        switch (e.key) {
-          case " ":
+        // Handle shortcuts in input interface (only when not focused on text inputs)
+        const isTextFocused = document.activeElement === textInput || document.activeElement === docTitleInput;
+
+        if (!isTextFocused) {
+          if (e.key === " ") {
             e.preventDefault();
-            togglePause();
-            break;
-          case "Escape":
+            if (textInput.value.trim()) {
+              startReading();
+            }
+          } else if (e.key.toLowerCase() === "r") {
             e.preventDefault();
-            stopReading();
-            break;
-          case "ArrowUp":
-            e.preventDefault();
-            adjustSpeed(50);
-            break;
-          case "ArrowDown":
-            e.preventDefault();
-            adjustSpeed(-50);
-            break;
+            resetInput();
+          }
+        }
+      });
+
+      // Welcome popup functions
+      function showWelcomePopup() {
+        const hasSeenWelcome = localStorage.getItem("rsvpHasSeenWelcome");
+        if (!hasSeenWelcome) {
+          welcomePopupOverlay.classList.add("active");
+        }
+      }
+
+      function hideWelcomePopup() {
+        welcomePopupOverlay.classList.remove("active");
+        localStorage.setItem("rsvpHasSeenWelcome", "true");
+      }
+
+      welcomePopupClose.addEventListener("click", hideWelcomePopup);
+      welcomePopupOk.addEventListener("click", hideWelcomePopup);
+
+      // Close popup when clicking overlay
+      welcomePopupOverlay.addEventListener("click", (e) => {
+        if (e.target === welcomePopupOverlay) {
+          hideWelcomePopup();
         }
       });
 
       // Initialize
       loadSettings();
-      updateWPMDisplay();
+      // updateWPMDisplay();
+      renderHistory();
+      showWelcomePopup();
+
+      // Initialize slider value positions
+      updateSliderValuePosition(fontSizeSlider, fontSizeValue);
+      updateSliderValuePosition(speedSlider, speedValue);
+      updateSliderValuePosition(punctuationSlider, punctuationValue);
+
+      // Sidebar hover events for overlay
+      sidebarLeft.addEventListener("mouseenter", () => {
+        sidebarOverlay.classList.add("active");
+      });
+
+      sidebarLeft.addEventListener("mouseleave", () => {
+        sidebarOverlay.classList.remove("active");
+      });
+
+      sidebarRight.addEventListener("mouseenter", () => {
+        sidebarOverlay.classList.add("active");
+      });
+
+      sidebarRight.addEventListener("mouseleave", () => {
+        sidebarOverlay.classList.remove("active");
+      });
 
       // Update font size slider range on window resize
       let resizeTimeout;

@@ -9,7 +9,7 @@ export function getHistory() {
   return saved ? JSON.parse(saved) : [];
 }
 
-// Save history to localStorage and render
+// Save history  to localStorage and render
 export function saveHistory(history, historyList, historyEmpty) {
   localStorage.setItem("rsvpHistory", JSON.stringify(history));
   renderHistory(historyList, historyEmpty);

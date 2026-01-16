@@ -67,7 +67,7 @@ export function adjustSpeed(delta, speedSlider, speedValue) {
   const newSpeed = Math.max(100, Math.min(1000, state.settings.speed + delta));
   state.settings.speed = newSpeed;
   speedSlider.value = newSpeed;
-  speedValue.textContent = newSpeed + " wpm";
+  speedValue.textContent = newSpeed + "wpm";
   saveSettings();
 }
 
@@ -83,21 +83,18 @@ export function setupSettingsListeners(
   fontSizeSlider.addEventListener("input", (e) => {
     state.settings.fontSize = parseInt(e.target.value);
     fontSizeValue.textContent = state.settings.fontSize + "px";
-    updateSliderValuePosition(fontSizeSlider, fontSizeValue);
     saveSettings();
   });
 
   speedSlider.addEventListener("input", (e) => {
     state.settings.speed = parseInt(e.target.value);
-    speedValue.textContent = state.settings.speed + " wpm";
-    updateSliderValuePosition(speedSlider, speedValue);
+    speedValue.textContent = state.settings.speed + "wpm";
     saveSettings();
   });
 
   punctuationSlider.addEventListener("input", (e) => {
     state.settings.punctuationPause = parseInt(e.target.value);
     punctuationValue.textContent = state.settings.punctuationPause + "ms";
-    updateSliderValuePosition(punctuationSlider, punctuationValue);
     saveSettings();
   });
 }

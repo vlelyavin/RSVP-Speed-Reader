@@ -1,5 +1,90 @@
 /* RSVP Speed Reader - Sidebars Styles */
 
+/* === SIDEBAR TOGGLE BUTTONS === */
+.sidebar-toggle-btn {
+  position: fixed;
+  top: 20px;
+  background: transparent;
+  border: 1px solid #333;
+  color: #ffffff;
+  padding: 10px;
+  background: #0a0a0a;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+  border-radius: 7px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+.sidebar-toggle-btn:hover {
+  background: #1a1a1a;
+  border-color: #e63946;
+}
+
+.sidebar-toggle-btn svg {
+  flex-shrink: 0;
+}
+
+.sidebar-toggle-left {
+  left: 20px;
+}
+
+.sidebar-toggle-right {
+  right: 20px;
+}
+
+/* === CUSTOM TOOLTIPS === */
+.sidebar-toggle-btn .tooltip {
+  position: absolute;
+  background-color: #222;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-family: "Golos Text", sans-serif;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+  z-index: 100;
+  border: 1px solid #333;
+}
+
+.sidebar-toggle-left .tooltip {
+  left: 100%;
+  top: 50%;
+  transform: translate(10px, -50%);
+  margin-left: 8px;
+}
+
+.sidebar-toggle-right .tooltip {
+  right: 100%;
+  top: 50%;
+  transform: translate(-10px, -50%);
+  margin-right: 8px;
+}
+
+.sidebar-toggle-btn:hover .tooltip {
+  opacity: 1;
+}
+
+.sidebar-toggle-left:hover .tooltip {
+  transform: translate(0, -50%);
+}
+
+.sidebar-toggle-right:hover .tooltip {
+  transform: translate(0, -50%);
+}
+
+/* Hide buttons when reading interface is active */
+.reading-interface.active ~ .sidebar-toggle-btn {
+  display: none;
+}
+
 /* === SIDEBAR OVERLAY === */
 .sidebar-overlay {
   position: fixed;
@@ -34,32 +119,8 @@
   flex-direction: column;
 }
 
-.sidebar-left:hover,
 .sidebar-left.open {
   transform: translateX(0);
-}
-
-.sidebar-left-tab {
-  position: absolute;
-  right: -30px;
-  top: 50%;
-  transform: translateY(-50%);
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-  background-color: #0a0a0a;
-  border: 1px solid #222;
-  border-left: none;
-  padding: 15px 8px;
-  color: #fff;
-  font-size: 0.7rem;
-  cursor: pointer;
-  border-radius: 0 7px 7px 0;
-}
-
-.sidebar-left:hover .sidebar-left-tab,
-.sidebar-left.open .sidebar-left-tab {
-  opacity: 0;
-  pointer-events: none;
 }
 
 .sidebar-left-content {
@@ -71,11 +132,35 @@
   flex: 1;
 }
 
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
 .sidebar-title {
   color: #fff;
-  font-size: 1.1rem;
-  margin-bottom: 10px;
+  font-size: 1.25rem;
+  margin: 0;
   font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
+}
+
+.sidebar-close-btn {
+  background: transparent;
+  border: 1px solid #333;
+  color: #ffffff;
+  padding: 6px 12px;
+  background: #0a0a0a;
+  cursor: pointer;
+  font-family: "Golos Text", sans-serif;
+  font-size: 0.75rem;
+  transition: all 0.2s ease-out;
+  border-radius: 7px;
+}
+
+.sidebar-close-btn:hover {
+  background: #1a1a1a;
 }
 
 .sidebar-settings {
@@ -92,32 +177,29 @@
 
 .sidebar-setting-label {
   color: #fff;
-  font-size: 0.7rem;
+  font-size: 0.9rem;
 }
 
 .sidebar-setting-slider-wrapper {
-  position: relative;
-  padding-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .sidebar-setting .slider {
-  width: 100%;
+  flex: 1;
   height: 3px;
 }
 
 .sidebar-setting .slider-value {
   color: #fff;
-  font-size: 0.7rem;
-  position: absolute;
-  top: 0;
-  left: 0;
-  min-width: auto;
-  transform: translateX(-50%);
+  font-size: 0.8rem;
+  width: 70px;
+  text-align: center;
   background-color: #222;
-  padding: 2px 6px;
+  padding: 3px 0;
   border-radius: 4px;
   white-space: nowrap;
-  pointer-events: none;
 }
 
 /* === HINTS === */
@@ -163,32 +245,8 @@
   flex-direction: column;
 }
 
-.sidebar-right:hover,
 .sidebar-right.open {
   transform: translateX(0);
-}
-
-.sidebar-right-tab {
-  position: absolute;
-  left: -30px;
-  top: 50%;
-  transform: translateY(-50%);
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-  background-color: #0a0a0a;
-  border: 1px solid #222;
-  border-right: none;
-  padding: 15px 8px;
-  color: #fff;
-  font-size: 0.7rem;
-  cursor: pointer;
-  border-radius: 7px 0 0 7px;
-}
-
-.sidebar-right:hover .sidebar-right-tab,
-.sidebar-right.open .sidebar-right-tab {
-  opacity: 0;
-  pointer-events: none;
 }
 
 .sidebar-right-content {
@@ -205,12 +263,20 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 15px;
 }
 
 .history-title {
   color: #fff;
   font-size: 1.1rem;
   font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
+  margin: 0;
+}
+
+.history-header-buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
 
 .history-header button.ghost {

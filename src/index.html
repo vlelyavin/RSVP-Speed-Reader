@@ -48,34 +48,66 @@
       </div>
     </div>
 
+    <!-- Sidebar Toggle Buttons -->
+    <button class="sidebar-toggle-btn sidebar-toggle-left" id="openSettingsBtn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M3 8L15 8M15 8C15 9.65686 16.3431 11 18 11C19.6569 11 21 9.65685 21 8C21 6.34315 19.6569 5 18 5C16.3431 5 15 6.34315 15 8ZM9 16L21 16M9 16C9 17.6569 7.65685 19 6 19C4.34315 19 3 17.6569 3 16C3 14.3431 4.34315 13 6 13C7.65685 13 9 14.3431 9 16Z"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></path>
+      </svg>
+      <span class="tooltip">Open reader settings</span>
+    </button>
+    <button class="sidebar-toggle-btn sidebar-toggle-right" id="openHistoryBtn">
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="12" cy="12" r="10"></circle>
+        <polyline points="12 6 12 12 16 14"></polyline>
+      </svg>
+      <span class="tooltip">Open history timeline</span>
+    </button>
+
     <!-- Overlay for darkening when sidebar is open -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <!-- Left Sidebar - Settings -->
     <div class="sidebar-left" id="sidebarLeft">
-      <div class="sidebar-left-tab">Open reader settings</div>
       <div class="sidebar-left-content">
-        <p class="sidebar-title">Reader settings</p>
+        <div class="sidebar-header">
+          <p class="sidebar-title">Reader settings</p>
+          <button class="sidebar-close-btn" id="closeSettingsBtn">Close</button>
+        </div>
         <div class="sidebar-settings">
           <div class="sidebar-setting">
             <label class="sidebar-setting-label">Font size</label>
             <div class="sidebar-setting-slider-wrapper">
-              <span class="slider-value" id="fontSizeValue">70px</span>
               <input type="range" class="slider" id="fontSizeSlider" min="24" max="120" value="70" />
+              <span class="slider-value" id="fontSizeValue">70px</span>
             </div>
           </div>
           <div class="sidebar-setting">
             <label class="sidebar-setting-label">Reading speed</label>
             <div class="sidebar-setting-slider-wrapper">
-              <span class="slider-value" id="speedValue">300wpm</span>
               <input type="range" class="slider" id="speedSlider" min="100" max="1000" step="10" value="200" />
+              <span class="slider-value" id="speedValue">300wpm</span>
             </div>
           </div>
           <div class="sidebar-setting">
             <label class="sidebar-setting-label">Punctuation pause</label>
             <div class="sidebar-setting-slider-wrapper">
-              <span class="slider-value" id="punctuationValue">300ms</span>
               <input type="range" class="slider" id="punctuationSlider" min="0" step="25" max="1000" value="300" />
+              <span class="slider-value" id="punctuationValue">300ms</span>
             </div>
           </div>
         </div>
@@ -89,11 +121,13 @@
 
     <!-- Right Sidebar - History -->
     <div class="sidebar-right" id="sidebarRight">
-      <div class="sidebar-right-tab">Open history</div>
       <div class="sidebar-right-content">
         <div class="history-header">
           <p class="history-title">History</p>
-          <button id="clearHistoryBtn" class="ghost">Clear</button>
+          <div class="history-header-buttons">
+            <button id="clearHistoryBtn" class="ghost">Clear</button>
+            <button class="sidebar-close-btn" id="closeHistoryBtn">Close</button>
+          </div>
         </div>
         <p class="history-empty" id="historyEmpty">No saved docs yet.</p>
         <ul class="history-list" id="historyList"></ul>
@@ -109,15 +143,17 @@
           <input id="docTitle" type="text" placeholder="Give this doc a name" />
         </div>
 
-        <label for="textInput">Paste the text or upload file</label>
-        <div class="text-input-area-wrapper">
-          <textarea class="text-input-area" id="textInput" placeholder="Paste any text you want here"></textarea>
-
-          <div class="file-row">
-            <input id="pdfInput" type="file" accept="application/pdf" />
-            <label class="file-button" for="pdfInput">Upload PDF file</label>
-            <p class="file-status" id="pdfStatus">No file yet</p>
+        <div class="field">
+          <label for="textInput">Paste the text or upload file</label>
+          <div class="text-input-area-wrapper">
+            <textarea class="text-input-area" id="textInput" placeholder="Paste any text you want here"></textarea>
           </div>
+        </div>
+
+        <div class="file-row">
+          <input id="fileInput" type="file" accept="application/pdf,application/epub+zip,.epub" />
+          <label class="file-button" for="fileInput">Upload PDF or EPUB</label>
+          <p class="file-status" id="fileStatus">No file yet</p>
         </div>
 
         <div class="input-controls">
@@ -126,7 +162,7 @@
         </div>
       </section>
 
-      <div class="drop-overlay" id="dropOverlay">Drop a PDF to load</div>
+      <div class="drop-overlay" id="dropOverlay">Drop a PDF or EPUB to load</div>
     </div>
 
     <!-- Reading Interface -->
@@ -139,6 +175,12 @@
       </div>
       <div class="word-display-container">
         <div class="word-display" id="wordDisplay"></div>
+        <div class="completion-message" id="completionMessage">
+          <h2 class="completion-title">Playback has been finished</h2>
+          <p class="completion-text">
+            You can close this window. Closing automatically in <span id="completionCounter">5</span>s
+          </p>
+        </div>
       </div>
       <div class="controls">
         <div class="progress-bar-container">
@@ -155,7 +197,7 @@
         <div class="controls-row">
           <button class="control-button" id="pauseButton">Pause</button>
           <button class="control-button" id="resetButton">Reset</button>
-          <button class="control-button" id="stopButton">Stop</button>
+          <button class="control-button" id="stopButton">Close</button>
         </div>
       </div>
     </div>

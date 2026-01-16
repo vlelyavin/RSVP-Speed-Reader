@@ -30,19 +30,39 @@ export function setupWelcomePopup(welcomePopupOverlay, welcomePopupClose, welcom
 
 // Sidebar overlay interactions
 export function setupSidebarOverlay(sidebarLeft, sidebarRight, sidebarOverlay) {
-  sidebarLeft.addEventListener("mouseenter", () => {
+  // Click overlay to close sidebars
+  sidebarOverlay.addEventListener("click", () => {
+    sidebarLeft.classList.remove("open");
+    sidebarRight.classList.remove("open");
+    sidebarOverlay.classList.remove("active");
+  });
+}
+
+// Setup sidebar toggle buttons
+export function setupSidebarToggle(openSettingsBtn, openHistoryBtn, closeSettingsBtn, closeHistoryBtn, sidebarLeft, sidebarRight, sidebarOverlay) {
+  // Open settings sidebar
+  openSettingsBtn.addEventListener("click", () => {
+    sidebarLeft.classList.add("open");
+    sidebarRight.classList.remove("open");
     sidebarOverlay.classList.add("active");
   });
 
-  sidebarLeft.addEventListener("mouseleave", () => {
+  // Open history sidebar
+  openHistoryBtn.addEventListener("click", () => {
+    sidebarRight.classList.add("open");
+    sidebarLeft.classList.remove("open");
+    sidebarOverlay.classList.add("active");
+  });
+
+  // Close settings sidebar
+  closeSettingsBtn.addEventListener("click", () => {
+    sidebarLeft.classList.remove("open");
     sidebarOverlay.classList.remove("active");
   });
 
-  sidebarRight.addEventListener("mouseenter", () => {
-    sidebarOverlay.classList.add("active");
-  });
-
-  sidebarRight.addEventListener("mouseleave", () => {
+  // Close history sidebar
+  closeHistoryBtn.addEventListener("click", () => {
+    sidebarRight.classList.remove("open");
     sidebarOverlay.classList.remove("active");
   });
 }
@@ -94,8 +114,8 @@ export function setupProgressBar(progressBarWrapper, progressBarFill, progressPe
   });
 }
 
-// Drag and drop for PDF
-export function setupDragAndDrop(dropOverlay, processPDFCallback) {
+// Drag and drop for PDF and EPUB
+export function setupDragAndDrop(dropOverlay, processPDFCallback, processEPUBCallback) {
   document.addEventListener("dragover", (e) => {
     e.preventDefault();
     dropOverlay.classList.add("active");
@@ -111,8 +131,15 @@ export function setupDragAndDrop(dropOverlay, processPDFCallback) {
     e.preventDefault();
     dropOverlay.classList.remove("active");
     const file = e.dataTransfer.files[0];
-    if (file && file.type === "application/pdf") {
-      processPDFCallback(file);
+
+    if (file) {
+      if (file.type === "application/pdf") {
+        processPDFCallback(file);
+      } else if (file.type === "application/epub+zip" || file.name.endsWith(".epub")) {
+        processEPUBCallback(file);
+      } else {
+        alert("Please drop a PDF or EPUB file.");
+      }
     }
   });
 }

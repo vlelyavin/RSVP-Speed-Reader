@@ -101,6 +101,44 @@
   padding: 0;
 }
 
+/* === COMPLETION MESSAGE === */
+.completion-message {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.completion-message.active {
+  display: flex;
+}
+
+.completion-title {
+  font-size: 2.5rem;
+  color: #ffffff;
+  font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
+  font-weight: normal;
+  margin: 0;
+}
+
+.completion-text {
+  font-size: 0.9rem;
+  color: #666;
+  font-family: "Golos Text", sans-serif;
+  margin: 0;
+}
+
+.completion-text #completionCounter {
+  color: #e63946;
+  /* font-weight: 600; */
+}
+
 /* === CONTROLS === */
 .controls {
   position: absolute;
@@ -142,7 +180,8 @@
 }
 
 #pauseButton,
-#stopButton {
+#stopButton,
+#resetButton {
   min-width: 100px;
 }
 

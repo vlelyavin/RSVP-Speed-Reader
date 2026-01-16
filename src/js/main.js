@@ -3,6 +3,7 @@
 import { state, loadSettings, saveDraft, loadDraft, clearDraft } from "./state.js";
 import { displayWord, parseText, calculateDelay } from "./rsvp.js";
 import { processPDF } from "./pdf-processor.js";
+import { processEPUB } from "./epub-processor.js";
 import {
   renderHistory,
   saveToHistory,
@@ -13,7 +14,6 @@ import {
 } from "./history.js";
 import {
   updateFontSizeSliderRange,
-  updateSliderValuePosition,
   adjustSpeed,
   setupSettingsListeners,
 } from "./settings.js";
@@ -21,6 +21,7 @@ import {
   showWelcomePopup,
   setupWelcomePopup,
   setupSidebarOverlay,
+  setupSidebarToggle,
   updateProgress,
   setupProgressBar,
   setupDragAndDrop,
@@ -32,6 +33,8 @@ const readingInterface = document.getElementById("readingInterface");
 const guideLines = document.querySelector(".guide-lines");
 const textInput = document.getElementById("textInput");
 const wordDisplay = document.getElementById("wordDisplay");
+const completionMessage = document.getElementById("completionMessage");
+const completionCounter = document.getElementById("completionCounter");
 const startButton = document.getElementById("startBtn");
 const resetButton = document.getElementById("resetButton");
 const pauseButton = document.getElementById("pauseButton");
@@ -42,8 +45,8 @@ const progressBarFill = document.getElementById("progressBarFill");
 
 // Input panel elements
 const docTitleInput = document.getElementById("docTitle");
-const pdfInput = document.getElementById("pdfInput");
-const pdfStatus = document.getElementById("pdfStatus");
+const fileInput = document.getElementById("fileInput");
+const fileStatus = document.getElementById("fileStatus");
 const resetBtn = document.getElementById("resetBtn");
 const clearHistoryBtn = document.getElementById("clearHistoryBtn");
 const historyEmpty = document.getElementById("historyEmpty");
@@ -62,6 +65,10 @@ const punctuationValue = document.getElementById("punctuationValue");
 const sidebarLeft = document.getElementById("sidebarLeft");
 const sidebarRight = document.getElementById("sidebarRight");
 const sidebarOverlay = document.getElementById("sidebarOverlay");
+const openSettingsBtn = document.getElementById("openSettingsBtn");
+const openHistoryBtn = document.getElementById("openHistoryBtn");
+const closeSettingsBtn = document.getElementById("closeSettingsBtn");
+const closeHistoryBtn = document.getElementById("closeHistoryBtn");
 
 // Welcome popup elements
 const welcomePopupOverlay = document.getElementById("welcomePopupOverlay");
@@ -71,14 +78,31 @@ const welcomePopupOk = document.getElementById("welcomePopupOk");
 // Auto-save interval for reading progress
 let progressAutoSaveInterval = null;
 
+// Show completion message with countdown
+function showCompletionMessage() {
+  // Hide word display, show completion message
+  wordDisplay.style.display = "none";
+  completionMessage.classList.add("active");
+
+  let countdown = 5;
+  completionCounter.textContent = countdown;
+
+  const countdownInterval = setInterval(() => {
+    countdown--;
+    completionCounter.textContent = countdown;
+
+    if (countdown <= 0) {
+      clearInterval(countdownInterval);
+      stopReading();
+    }
+  }, 1000);
+}
+
 // Show next word
 function showNextWord() {
   // Check if we've finished all words
   if (state.currentIndex >= state.words.length) {
-    // Show alert
-    alert("Playback has been finished");
-    // Add 500ms delay after playback finishes before closing
-    stopReading();
+    showCompletionMessage();
     return;
   }
 
@@ -93,13 +117,9 @@ function showNextWord() {
   if (state.isPlaying && state.currentIndex < state.words.length) {
     state.timeoutId = setTimeout(showNextWord, delay);
   } else if (state.currentIndex >= state.words.length && state.isPlaying) {
-    // All words displayed, wait for the last word's delay, then show alert
+    // All words displayed, wait for the last word's delay, then show completion
     setTimeout(() => {
-      alert("playback has been finished");
-      // Add 500ms delay after playback finishes before closing
-      setTimeout(() => {
-        stopReading();
-      }, 500);
+      showCompletionMessage();
     }, delay);
   }
 }
@@ -179,6 +199,10 @@ function stopReading() {
 
   pauseButton.textContent = "Pause";
 
+  // Reset completion message
+  completionMessage.classList.remove("active");
+  wordDisplay.style.display = "flex";
+
   // Animate closing
   readingInterface.classList.add("closing");
   readingInterface.classList.remove("active");
@@ -204,21 +228,30 @@ function resetInput() {
   clearTimeout(state.timeoutId);
   textInput.value = "";
   docTitleInput.value = "";
-  pdfStatus.textContent = "No PDF loaded";
+  fileStatus.textContent = "No file yet";
   clearDraft(); // Clear saved draft
   if (readingInterface.classList.contains("active")) {
     stopReading();
   }
 }
 
-// Handle PDF upload
-async function handlePDFUpload(e) {
+// Handle file upload (PDF or EPUB)
+async function handleFileUpload(e) {
   const file = e.target.files[0];
-  if (file) {
-    await processPDF(file, textInput, docTitleInput, pdfStatus);
-    // Save draft after PDF is loaded
-    saveDraft(docTitleInput.value, textInput.value);
+  if (!file) return;
+
+  // Detect file type and route to appropriate handler
+  if (file.type === "application/pdf") {
+    await processPDF(file, textInput, docTitleInput, fileStatus);
+  } else if (file.type === "application/epub+zip" || file.name.endsWith(".epub")) {
+    await processEPUB(file, textInput, docTitleInput, fileStatus);
+  } else {
+    fileStatus.textContent = "Unsupported file type. Please upload PDF or EPUB.";
+    return;
   }
+
+  // Save draft after file is loaded
+  saveDraft(docTitleInput.value, textInput.value);
 }
 
 // Step to previous word (pauses playback)
@@ -341,14 +374,19 @@ resetButton.addEventListener("click", resetProgress);
 pauseButton.addEventListener("click", togglePause);
 stopButton.addEventListener("click", stopReading);
 resetBtn.addEventListener("click", resetInput);
-pdfInput.addEventListener("change", handlePDFUpload);
+fileInput.addEventListener("change", handleFileUpload);
 clearHistoryBtn.addEventListener("click", () => clearHistory(historyList, historyEmpty));
 
 // Setup UI components
 setupWelcomePopup(welcomePopupOverlay, welcomePopupClose, welcomePopupOk);
 setupSidebarOverlay(sidebarLeft, sidebarRight, sidebarOverlay);
+setupSidebarToggle(openSettingsBtn, openHistoryBtn, closeSettingsBtn, closeHistoryBtn, sidebarLeft, sidebarRight, sidebarOverlay);
 setupProgressBar(progressBarWrapper, progressBarFill, progressPercentage, wordDisplay, guideLines);
-setupDragAndDrop(dropOverlay, (file) => processPDF(file, textInput, docTitleInput, pdfStatus));
+setupDragAndDrop(
+  dropOverlay,
+  (file) => processPDF(file, textInput, docTitleInput, fileStatus),
+  (file) => processEPUB(file, textInput, docTitleInput, fileStatus)
+);
 setupSettingsListeners(fontSizeSlider, fontSizeValue, speedSlider, speedValue, punctuationSlider, punctuationValue);
 
 // Initialize
@@ -362,11 +400,6 @@ speedSlider.value = state.settings.speed;
 speedValue.textContent = state.settings.speed + "wpm";
 punctuationSlider.value = state.settings.punctuationPause;
 punctuationValue.textContent = state.settings.punctuationPause + "ms";
-
-// Initialize slider value positions
-updateSliderValuePosition(fontSizeSlider, fontSizeValue);
-updateSliderValuePosition(speedSlider, speedValue);
-updateSliderValuePosition(punctuationSlider, punctuationValue);
 
 // Render history and show welcome popup
 renderHistory(historyList, historyEmpty);
@@ -415,6 +448,11 @@ window.addEventListener("resize", () => {
     if (oldValue !== state.settings.fontSize) {
       fontSizeSlider.value = state.settings.fontSize;
       fontSizeValue.textContent = state.settings.fontSize + "px";
+
+      // Update word display if reading interface is active
+      if (readingInterface.classList.contains("active") && state.words.length > 0 && state.currentIndex > 0) {
+        displayWord(state.words[state.currentIndex - 1], wordDisplay, guideLines);
+      }
     }
   }, 100);
 });

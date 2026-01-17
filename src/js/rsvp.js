@@ -68,13 +68,66 @@ export function displayWord(word, wordDisplay, guideLines) {
   wordDisplay.style.transform = `translateX(${-offset}px)`;
 }
 
-// Parse text into words
+// Parse text into words with smart splitting
 export function parseText(text) {
-  // Split by whitespace and filter empty strings
-  return text
+  // First, split by whitespace
+  let words = text
     .trim()
     .split(/\s+/)
     .filter((word) => word.length > 0);
+
+  // Process each word to handle sentence-ending punctuation and long words
+  const processedWords = [];
+
+  for (let word of words) {
+    // Split on sentence-ending punctuation (. and ;) while preserving them
+    // Match pattern: text followed by . or ; (capture both parts)
+    const sentenceSplitRegex = /([^.;]+)([.;])/g;
+    let lastIndex = 0;
+    let match;
+    let hasSentenceSplit = false;
+
+    while ((match = sentenceSplitRegex.exec(word)) !== null) {
+      hasSentenceSplit = true;
+      // Add the text with its punctuation
+      if (match[1].trim()) {
+        processedWords.push(match[1].trim() + match[2]);
+      }
+      lastIndex = match.index + match[0].length;
+    }
+
+    // Add any remaining text after the last punctuation
+    if (hasSentenceSplit && lastIndex < word.length) {
+      const remaining = word.substring(lastIndex).trim();
+      if (remaining) {
+        processedWords.push(remaining);
+      }
+    }
+
+    // If no sentence punctuation was found, add the whole word
+    if (!hasSentenceSplit) {
+      processedWords.push(word);
+    }
+  }
+
+  // Now split any words that are too long to fit on screen
+  const maxWordLength = 30; // Conservative max characters per word
+  const finalWords = [];
+
+  for (let word of processedWords) {
+    if (word.length > maxWordLength) {
+      // Split long word into chunks
+      const chunks = [];
+      for (let i = 0; i < word.length; i += maxWordLength) {
+        chunks.push(word.substring(i, i + maxWordLength));
+      }
+      finalWords.push(...chunks);
+    } else {
+      finalWords.push(word);
+    }
+  }
+
+  return finalWords;
 }
 
 // Check if word ends with punctuation

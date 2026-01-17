@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet" />
-
+    <link rel="icon" href="./icon-128.png" type="image/x-icon" />
     <!-- CSS Modules -->
     <link rel="stylesheet" href="./styles/main.css" />
     <link rel="stylesheet" href="./styles/sidebars.css" />
@@ -99,22 +99,24 @@
           <div class="sidebar-setting">
             <label class="sidebar-setting-label">Reading speed</label>
             <div class="sidebar-setting-slider-wrapper">
-              <input type="range" class="slider" id="speedSlider" min="100" max="1000" step="10" value="200" />
+              <input type="range" class="slider" id="speedSlider" min="100" max="1000" step="50" value="300" />
               <span class="slider-value" id="speedValue">300wpm</span>
             </div>
           </div>
           <div class="sidebar-setting">
             <label class="sidebar-setting-label">Punctuation pause</label>
             <div class="sidebar-setting-slider-wrapper">
-              <input type="range" class="slider" id="punctuationSlider" min="0" step="25" max="1000" value="300" />
+              <input type="range" class="slider" id="punctuationSlider" min="0" step="50" max="500" value="150" />
               <span class="slider-value" id="punctuationValue">300ms</span>
             </div>
           </div>
         </div>
         <div class="hint">
+          <div class="hint-item"><span>Esc</span> close</div>
           <div class="hint-item"><span>Space</span> start/pause</div>
           <div class="hint-item"><span>R</span> reset</div>
           <div class="hint-item"><span>← →</span> step words</div>
+          <div class="hint-item"><span>↑ ↓</span> adjust speed</div>
         </div>
       </div>
     </div>
@@ -184,14 +186,16 @@
       </div>
       <div class="controls">
         <div class="progress-bar-container">
-          <div class="progress-percentage" id="progressPercentage">0.00%</div>
+          <div class="progress-percentage" id="progressPercentage">0.00% | 0 / 0 | 300wpm</div>
           <div class="progress-bar-wrapper" id="progressBarWrapper">
             <div class="progress-bar-fill" id="progressBarFill"></div>
           </div>
           <div class="progress-controls-hint">
+            <div class="hint-item"><span>Esc</span> close</div>
             <div class="hint-item"><span>Space</span> start/pause</div>
             <div class="hint-item"><span>R</span> reset</div>
             <div class="hint-item"><span>← →</span> step words</div>
+            <div class="hint-item"><span>↑ ↓</span> adjust speed</div>
           </div>
         </div>
         <div class="controls-row">
@@ -201,6 +205,15 @@
         </div>
       </div>
     </div>
+
+    <!-- Footer -->
+    <footer style="position: fixed; bottom: 10px; right: 10px; z-index: 1;">
+      <a href="./privacy-policy.html" style="color: #666; text-decoration: none; font-size: 0.75rem; font-family: 'Golos Text', sans-serif;"
+         onmouseover="this.style.color='#ffffff'"
+         onmouseout="this.style.color='#666'">
+        Privacy Policy
+      </a>
+    </footer>
 
     <!-- JavaScript Module -->
     <script type="module" src="./js/main.js"></script>

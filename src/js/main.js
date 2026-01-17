@@ -79,6 +79,8 @@ const welcomePopupOk = document.getElementById("welcomePopupOk");
 let progressAutoSaveInterval = null;
 
 // Show completion message with countdown
+let countdownInterval = null;
+
 function showCompletionMessage() {
   // Hide word display, show completion message
   wordDisplay.style.display = "none";
@@ -87,12 +89,18 @@ function showCompletionMessage() {
   let countdown = 5;
   completionCounter.textContent = countdown;
 
-  const countdownInterval = setInterval(() => {
+  // Clear any existing countdown interval
+  if (countdownInterval) {
+    clearInterval(countdownInterval);
+  }
+
+  countdownInterval = setInterval(() => {
     countdown--;
     completionCounter.textContent = countdown;
 
     if (countdown <= 0) {
       clearInterval(countdownInterval);
+      countdownInterval = null;
       stopReading();
     }
   }, 1000);
@@ -108,7 +116,19 @@ function showNextWord() {
 
   const word = state.words[state.currentIndex];
   displayWord(word, wordDisplay, guideLines);
-  updateProgress(progressBarFill, progressPercentage);
+  
+  // Update progress - for the last word, show 100%
+  const isLastWord = state.currentIndex === state.words.length - 1;
+  if (isLastWord) {
+    // Set progress to 100% for the last word
+    progressBarFill.style.width = "100%";
+    const totalWords = state.words.length;
+    const currentWordIndex = state.currentIndex + 1;
+    const speed = state.settings.speed;
+    progressPercentage.innerHTML = `100.00% <span style="color: #666;">|</span> ${currentWordIndex} / ${totalWords} <span style="color: #666;">|</span> ${speed}wpm`;
+  } else {
+    updateProgress(progressBarFill, progressPercentage);
+  }
 
   const delay = calculateDelay(word);
   state.currentIndex++;
@@ -117,10 +137,10 @@ function showNextWord() {
   if (state.isPlaying && state.currentIndex < state.words.length) {
     state.timeoutId = setTimeout(showNextWord, delay);
   } else if (state.currentIndex >= state.words.length && state.isPlaying) {
-    // All words displayed, wait for the last word's delay, then show completion
+    // All words displayed, wait for the last word's delay + 500ms, then show completion
     setTimeout(() => {
       showCompletionMessage();
-    }, delay);
+    }, delay + 500);
   }
 }
 
@@ -167,7 +187,10 @@ function startReading() {
     }
   }, 3000); // Auto-save every 3 seconds
 
-  showNextWord();
+  // Start reading after 500ms delay
+  setTimeout(() => {
+    showNextWord();
+  }, 500);
 }
 
 // Pause/Resume reading
@@ -190,6 +213,12 @@ function stopReading() {
 
   state.isPlaying = false;
   clearTimeout(state.timeoutId);
+
+  // Clear countdown interval if active
+  if (countdownInterval) {
+    clearInterval(countdownInterval);
+    countdownInterval = null;
+  }
 
   // Clear auto-save interval
   if (progressAutoSaveInterval) {
@@ -296,6 +325,16 @@ function stepNextWord() {
 function resetProgress() {
   if (state.words.length === 0) return;
 
+  // Clear countdown if completion message is showing
+  if (countdownInterval) {
+    clearInterval(countdownInterval);
+    countdownInterval = null;
+  }
+
+  // Hide completion message and show word display
+  completionMessage.classList.remove("active");
+  wordDisplay.style.display = "flex";
+
   // Pause if playing
   if (state.isPlaying) {
     state.isPlaying = false;
@@ -338,10 +377,12 @@ document.addEventListener("keydown", (e) => {
       case "ArrowUp":
         e.preventDefault();
         adjustSpeed(50, speedSlider, speedValue);
+        updateProgress(progressBarFill, progressPercentage);
         break;
       case "ArrowDown":
         e.preventDefault();
         adjustSpeed(-50, speedSlider, speedValue);
+        updateProgress(progressBarFill, progressPercentage);
         break;
     }
     return;
@@ -387,7 +428,7 @@ setupDragAndDrop(
   (file) => processPDF(file, textInput, docTitleInput, fileStatus),
   (file) => processEPUB(file, textInput, docTitleInput, fileStatus)
 );
-setupSettingsListeners(fontSizeSlider, fontSizeValue, speedSlider, speedValue, punctuationSlider, punctuationValue);
+setupSettingsListeners(fontSizeSlider, fontSizeValue, speedSlider, speedValue, punctuationSlider, punctuationValue, progressBarFill, progressPercentage);
 
 // Initialize
 loadSettings();

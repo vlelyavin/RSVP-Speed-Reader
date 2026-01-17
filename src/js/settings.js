@@ -1,6 +1,7 @@
 /* RSVP Speed Reader - Settings Management */
 
 import { state, saveSettings } from "./state.js";
+import { updateProgress } from "./ui.js";
 
 // Check if device is mobile
 export function isMobile() {
@@ -78,7 +79,9 @@ export function setupSettingsListeners(
   speedSlider,
   speedValue,
   punctuationSlider,
-  punctuationValue
+  punctuationValue,
+  progressBarFill = null,
+  progressPercentage = null
 ) {
   fontSizeSlider.addEventListener("input", (e) => {
     state.settings.fontSize = parseInt(e.target.value);
@@ -90,6 +93,10 @@ export function setupSettingsListeners(
     state.settings.speed = parseInt(e.target.value);
     speedValue.textContent = state.settings.speed + "wpm";
     saveSettings();
+    // Update progress display to reflect speed change
+    if (progressBarFill && progressPercentage) {
+      updateProgress(progressBarFill, progressPercentage);
+    }
   });
 
   punctuationSlider.addEventListener("input", (e) => {

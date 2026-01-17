@@ -39,7 +39,15 @@ export function setupSidebarOverlay(sidebarLeft, sidebarRight, sidebarOverlay) {
 }
 
 // Setup sidebar toggle buttons
-export function setupSidebarToggle(openSettingsBtn, openHistoryBtn, closeSettingsBtn, closeHistoryBtn, sidebarLeft, sidebarRight, sidebarOverlay) {
+export function setupSidebarToggle(
+  openSettingsBtn,
+  openHistoryBtn,
+  closeSettingsBtn,
+  closeHistoryBtn,
+  sidebarLeft,
+  sidebarRight,
+  sidebarOverlay
+) {
   // Open settings sidebar
   openSettingsBtn.addEventListener("click", () => {
     sidebarLeft.classList.add("open");
@@ -70,7 +78,14 @@ export function setupSidebarToggle(openSettingsBtn, openHistoryBtn, closeSetting
 // Progress bar interaction
 let isDraggingProgress = false;
 
-function updateProgressFromPosition(clientX, progressBarWrapper, progressBarFill, progressPercentage, wordDisplay, guideLines) {
+function updateProgressFromPosition(
+  clientX,
+  progressBarWrapper,
+  progressBarFill,
+  progressPercentage,
+  wordDisplay,
+  guideLines
+) {
   const rect = progressBarWrapper.getBoundingClientRect();
   const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
   const percent = x / rect.width;
@@ -87,19 +102,36 @@ function updateProgressFromPosition(clientX, progressBarWrapper, progressBarFill
 export function updateProgress(progressBarFill, progressPercentage) {
   // Update progress bar
   const progressPercent = state.words.length > 0 ? (state.currentIndex / state.words.length) * 100 : 0;
-  progressPercentage.textContent = `${progressPercent.toFixed(2)}%`;
+  const currentWordIndex = state.currentIndex + 1; // Start from 1
+  const totalWords = state.words.length;
+  const speed = state.settings.speed;
+  progressPercentage.innerHTML = `${progressPercent.toFixed(2)}% <span style="color: #666;">|</span> ${currentWordIndex} / ${totalWords} <span style="color: #666;">|</span> ${speed}wpm`;
   progressBarFill.style.width = `${progressPercent}%`;
 }
 
 export function setupProgressBar(progressBarWrapper, progressBarFill, progressPercentage, wordDisplay, guideLines) {
   progressBarWrapper.addEventListener("mousedown", (e) => {
     isDraggingProgress = true;
-    updateProgressFromPosition(e.clientX, progressBarWrapper, progressBarFill, progressPercentage, wordDisplay, guideLines);
+    updateProgressFromPosition(
+      e.clientX,
+      progressBarWrapper,
+      progressBarFill,
+      progressPercentage,
+      wordDisplay,
+      guideLines
+    );
   });
 
   document.addEventListener("mousemove", (e) => {
     if (isDraggingProgress) {
-      updateProgressFromPosition(e.clientX, progressBarWrapper, progressBarFill, progressPercentage, wordDisplay, guideLines);
+      updateProgressFromPosition(
+        e.clientX,
+        progressBarWrapper,
+        progressBarFill,
+        progressPercentage,
+        wordDisplay,
+        guideLines
+      );
     }
   });
 
@@ -109,7 +141,14 @@ export function setupProgressBar(progressBarWrapper, progressBarFill, progressPe
 
   progressBarWrapper.addEventListener("click", (e) => {
     if (!isDraggingProgress) {
-      updateProgressFromPosition(e.clientX, progressBarWrapper, progressBarFill, progressPercentage, wordDisplay, guideLines);
+      updateProgressFromPosition(
+        e.clientX,
+        progressBarWrapper,
+        progressBarFill,
+        progressPercentage,
+        wordDisplay,
+        guideLines
+      );
     }
   });
 }

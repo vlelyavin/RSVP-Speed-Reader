@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import { resolve } from 'path';
 import javascriptObfuscator from 'vite-plugin-javascript-obfuscator';
 
 export default defineConfig({
@@ -15,6 +16,12 @@ export default defineConfig({
       },
     },
     sourcemap: false, // Disable source maps for production
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'src/index.html'),
+        privacy: resolve(__dirname, 'src/privacy-policy.html'),
+      },
+    },
   },
   plugins: [
     javascriptObfuscator({

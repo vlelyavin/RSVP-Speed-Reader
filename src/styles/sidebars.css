@@ -202,6 +202,39 @@
   white-space: nowrap;
 }
 
+.sidebar-speed-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+}
+
+.speed-control-btn {
+  background: transparent;
+  border: 1px solid #333;
+  color: #ffffff;
+  padding: 6px 12px;
+  background: #0a0a0a;
+  cursor: pointer;
+  font-family: "Golos Text", sans-serif;
+  font-size: 1rem;
+  transition: all 0.2s ease-out;
+  border-radius: 7px;
+  min-width: 40px;
+}
+
+.speed-control-btn:hover {
+  background: #1a1a1a;
+  border-color: #e63946;
+}
+
+.speed-control-label {
+  color: #fff;
+  font-size: 0.9rem;
+  min-width: 70px;
+  text-align: center;
+}
+
 /* === HINTS === */
 .hint {
   display: flex;

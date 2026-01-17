@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy - RSVP Speed Reader</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: "Golos Text", sans-serif;
+      background-color: #000000;
+      color: #ffffff;
+      line-height: 1.6;
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .container {
+      background-color: #111111;
+      padding: 40px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      color: #ffffff;
+    }
+    .last-updated {
+      color: #888888;
+      margin-bottom: 30px;
+      font-size: 0.9rem;
+    }
+    h2 {
+      font-size: 1.5rem;
+      margin-top: 30px;
+      margin-bottom: 15px;
+      color: #ffffff;
+    }
+    h3 {
+      font-size: 1.2rem;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      color: #ffffff;
+    }
+    p {
+      margin-bottom: 15px;
+      color: #dddddd;
+    }
+    ul {
+      margin-left: 20px;
+      margin-bottom: 15px;
+    }
+    li {
+      margin-bottom: 8px;
+      color: #dddddd;
+    }
+    strong {
+      color: #ffffff;
+    }
+    a {
+      color: #4a9eff;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .summary {
+      background-color: #1a1a1a;
+      padding: 20px;
+      border-radius: 6px;
+      margin-top: 30px;
+      border-left: 4px solid #4a9eff;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: #4a9eff;
+      text-decoration: none;
+    }
+    .back-link:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+      .container {
+        padding: 20px;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="/RSVP-Speed-Reader/" class="back-link">← Back to RSVP Speed Reader</a>
+  
+  <div class="container">
+    <h1>Privacy Policy</h1>
+    <p class="last-updated"><strong>Last updated:</strong> January 17, 2025</p>
+
+    <h2>Introduction</h2>
+    <p>
+      RSVP Speed Reader ("the Extension") is a Chrome browser extension that enables users to read selected text using the Rapid Serial Visual Presentation (RSVP) technique. This privacy policy explains how the Extension handles user data.
+    </p>
+
+    <h2>Data Collection</h2>
+    <p><strong>The Extension does NOT collect, store, transmit, or share any user data with external servers.</strong></p>
+    <p>The Extension operates entirely locally on your device and does not:</p>
+    <ul>
+      <li>Collect personal information</li>
+      <li>Track your browsing activity</li>
+      <li>Send data to external servers</li>
+      <li>Use analytics or tracking services</li>
+      <li>Share data with third parties</li>
+    </ul>
+
+    <h2>Local Storage</h2>
+    <p>The Extension uses Chrome's <code>storage.local</code> API to store the following information <strong>only on your device</strong>:</p>
+    <ul>
+      <li><strong>Reading speed preference</strong> (100-1000 WPM)</li>
+      <li><strong>Font size preference</strong> (40-120px)</li>
+      <li><strong>Other display settings</strong></li>
+    </ul>
+    <p>This data:</p>
+    <ul>
+      <li>Is stored locally on your device only</li>
+      <li>Is NOT synced to external servers</li>
+      <li>Is NOT shared with anyone</li>
+      <li>Can be cleared at any time via Chrome's extension settings</li>
+    </ul>
+
+    <h2>Permissions</h2>
+    <p>The Extension requests the following permissions and uses them as follows:</p>
+
+    <h3>contextMenus</h3>
+    <ul>
+      <li><strong>Purpose:</strong> Adds a "Read with RSVP" option to the right-click context menu</li>
+      <li><strong>Usage:</strong> Only activates when you select text and right-click</li>
+      <li><strong>Data:</strong> No data is collected from this permission</li>
+    </ul>
+
+    <h3>activeTab</h3>
+    <ul>
+      <li><strong>Purpose:</strong> Allows reading selected text from the currently active browser tab</li>
+      <li><strong>Usage:</strong> Only accesses text that you explicitly select</li>
+      <li><strong>Data:</strong> Text processing happens entirely in your browser, never transmitted</li>
+    </ul>
+
+    <h3>storage</h3>
+    <ul>
+      <li><strong>Purpose:</strong> Saves your reading preferences locally</li>
+      <li><strong>Usage:</strong> Stores only your settings (speed, font size) on your device</li>
+      <li><strong>Data:</strong> Settings stored locally only, never synced or transmitted</li>
+    </ul>
+
+    <h2>Content Scripts</h2>
+    <p>The Extension injects content scripts on:</p>
+    <ol>
+      <li><strong>All web pages</strong> - To enable the context menu reading feature</li>
+      <li><strong>X.com and Twitter.com</strong> - To add a "Speed read" option to post menus</li>
+    </ol>
+    <p>These scripts:</p>
+    <ul>
+      <li>Only run when you interact with the page (right-click or open menu)</li>
+      <li>Do not collect or transmit data</li>
+      <li>Operate entirely within your browser</li>
+    </ul>
+
+    <h2>X/Twitter Integration</h2>
+    <p>When using the Extension on X.com or Twitter.com:</p>
+    <ul>
+      <li>The Extension adds a "Speed read" menu item to post menus</li>
+      <li>Text is extracted locally from the page</li>
+      <li>No data is sent to X/Twitter or any external server</li>
+      <li>The Extension does not access your X/Twitter account or credentials</li>
+    </ul>
+
+    <h2>Third-Party Services</h2>
+    <p>The Extension does not use any third-party services, analytics, or external APIs.</p>
+
+    <h2>Updates</h2>
+    <p>
+      This Extension may be updated periodically to add features or fix bugs. Updates are delivered through the Chrome Web Store and do not change the Extension's data collection practices described in this policy.
+    </p>
+
+    <h2>Data Deletion</h2>
+    <p>You can delete all locally stored data at any time by:</p>
+    <ol>
+      <li>Going to <code>chrome://extensions/</code></li>
+      <li>Finding "RSVP Speed Reader"</li>
+      <li>Clicking "Remove" (this deletes all local data)</li>
+    </ol>
+    <p>Or by manually clearing Chrome's extension storage via developer tools.</p>
+
+    <h2>Children's Privacy</h2>
+    <p>
+      The Extension does not knowingly collect data from children under 13. Since no data is collected, this is not a concern, but we make this statement for completeness.
+    </p>
+
+    <h2>Changes to This Policy</h2>
+    <p>
+      If this privacy policy changes, we will update the "Last updated" date at the top of this document. Significant changes will be noted in the Extension's update notes.
+    </p>
+
+    <h2>Contact</h2>
+    <p>For questions about this privacy policy, please contact:</p>
+    <ul>
+      <li>Website: <a href="https://vlelyavin.github.io/RSVP-Speed-Reader/">https://vlelyavin.github.io/RSVP-Speed-Reader/</a></li>
+    </ul>
+
+    <div class="summary">
+      <h2>Summary</h2>
+      <p>
+        <strong>In short:</strong> This Extension is designed with privacy in mind. It does not collect, store, transmit, or share any user data. All processing happens locally on your device, and all preferences are stored only on your device.
+      </p>
+    </div>
+  </div>
+</body>
+</html>
